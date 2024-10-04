@@ -35,6 +35,7 @@ namespace C500Hemis.Controllers.CB
 
             var tbKyLuatCanBo = await _context.TbKyLuatCanBos
                 .Include(t => t.IdCanBoNavigation)
+                .ThenInclude(human => human.IdNguoiNavigation)
                 .Include(t => t.IdCapQuyetDinhNavigation)
                 .Include(t => t.IdLoaiKyLuatNavigation)
                 .FirstOrDefaultAsync(m => m.IdKyLuatCanBo == id);
