@@ -32,7 +32,7 @@
                 font-size: 16px;
             }
 
-            table tr:hover {
+            .value:hover {
                 background-color: #D3D3D3;
             }
 
@@ -88,7 +88,7 @@
     </style>
 }
 
-<h1 style="text-align: center">HỒ SƠ CÁN BỘ BỊ KỶ LUẬT</h1>
+<h1 style="text-align: center">HỒ SƠ CÁN BỘ BỊ KỶ LUẬT (@Model.Count())</h1>
 
 <div class="contain">
     <table class="table" id="view_table">
@@ -96,26 +96,25 @@
 
             <tr style="text-align: center">
                 <th>
-                    CÁN BỘ
+                    @Html.DisplayNameFor(model => model.IdCanBoNavigation)
                 </th>
                 <th>
-                    LÝ DO
+                    @Html.DisplayNameFor(model => model.LyDo)
                 </th>
                 <th>
-                    NGÀY NHẬN QĐ
+                    @Html.DisplayNameFor(model => model.NgayThangNamQuyetDinh)
                 </th>
                 <th>
-                    SỐ QĐ
+                    @Html.DisplayNameFor(model => model.SoQuyetDinh)
                 </th>
                 <th>
-                    NĂM BỊ KỶ LUẬT
-                </th>
-
-                <th>
-                    CẤP QĐ
+                    @Html.DisplayNameFor(model => model.NamBiKyLuat)
                 </th>
                 <th>
-                    HÌNH THỨC
+                    @Html.DisplayNameFor(model => model.IdCapQuyetDinhNavigation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdLoaiKyLuatNavigation)
                 </th>
                 <th></th>
             </tr>
@@ -123,7 +122,7 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr style="text-align: center; cursor: pointer;"
+                <tr class="value" style="text-align: center; cursor: pointer;"
                     onclick="window.location.href='@Url.Action("Details", new { id = item.IdKyLuatCanBo })'">
                     <td>
                         @Html.DisplayFor(modelItem => item.IdCanBoNavigation.IdNguoiNavigation.Ho) @Html.DisplayFor(modelItem => item.IdCanBoNavigation.IdNguoiNavigation.Ten)

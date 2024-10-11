@@ -75,17 +75,19 @@ namespace C500Hemis.Controllers.CB
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdKyLuatCanBo,IdCanBo,IdLoaiKyLuat,LyDo,IdCapQuyetDinh,NgayThangNamQuyetDinh,SoQuyetDinh,NamBiKyLuat")] TbKyLuatCanBo tbKyLuatCanBo)
         {
-            // Kiểm tra dữ liệu có chuẩn không
-            // Đối sánh với lớp tbKyluatCanBo
+            //Kiểm tra đã tồn tại trong TbKyLuatCanBo chua
+            TbKyLuatCanBo? cr = (await _context.TbKyLuatCanBos.SingleOrDefaultAsync(e => e.IdKyLuatCanBo == tbKyLuatCanBo.IdKyLuatCanBo));
+            //Nếu đã tồn tại tức khác null thì thêm Error cho IdKyLuatCanBo
+            if (cr != null) ModelState.AddModelError("IdKyLuatCanBo", "Đã tồn tại Id này!");
             if (ModelState.IsValid)
             {
-                    //Thêm đối tượng vào context
-                    _context.Add(tbKyLuatCanBo);
-                    // Lưu vào cơ sở dữ liệu
-                    await _context.SaveChangesAsync();
-                    // Nếu thành công sẽ trở về trang index
-                    return RedirectToAction(nameof(Index));
-                }
+                //Thêm đối tượng vào context
+                _context.Add(tbKyLuatCanBo);
+                // Lưu vào cơ sở dữ liệu
+                await _context.SaveChangesAsync();
+                // Nếu thành công sẽ trở về trang index
+                return RedirectToAction(nameof(Index));
+            }
             ViewData["IdCanBo"] = new SelectList(_context.TbCanBos.Include(h => h.IdNguoiNavigation), "IdCanBo", "IdNguoiNavigation.name", tbKyLuatCanBo.IdCanBo);
             ViewData["IdCapQuyetDinh"] = new SelectList(_context.DmCapKhenThuongs, "IdCapKhenThuong", "CapKhenThuong", tbKyLuatCanBo.IdCapQuyetDinh);
             ViewData["IdLoaiKyLuat"] = new SelectList(_context.DmLoaiKyLuats, "IdLoaiKyLuat", "LoaiKyLuat", tbKyLuatCanBo.IdLoaiKyLuat);
