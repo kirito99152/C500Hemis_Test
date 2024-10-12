@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using C500Hemis.Models.DM;
 
 namespace C500Hemis.Models;
@@ -20,10 +22,15 @@ public partial class TbNguoi
 
     public string? SoCccd { get; set; }
     [DisplayName("Ngày Cấp CCCD ")]
+    //[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+    [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+    [DataType(DataType.Date)]
     public DateOnly? NgayCapCccd { get; set; }
     [DisplayName("Nơi Cấp CCCD ")]
     public string? NoiCapCccd { get; set; }
     [DisplayName("Ngày Sinh ")]
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+    [DataType(DataType.Date)]
     public DateOnly? NgaySinh { get; set; }
     [DisplayName("Giới Tính ")]
     public int? IdGioiTinh { get; set; }
@@ -32,14 +39,24 @@ public partial class TbNguoi
     [DisplayName("Tôn Giáo ")]
     public int? IdTonGiao { get; set; }
     [DisplayName("Ngày Vào Đoàn ")]
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+    [DataType(DataType.Date)]
     public DateOnly? NgayVaoDoan { get; set; }
     [DisplayName("Ngày Vào Đảng ")]
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+    [DataType(DataType.Date)]
     public DateOnly? NgayVaoDang { get; set; }
     [DisplayName("Ngày Vào Đảng Chính Thức ")]
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+    [DataType(DataType.Date)]
     public DateOnly? NgayVaoDangChinhThuc { get; set; }
     [DisplayName("Ngày Nhập Ngũ ")]
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+    [DataType(DataType.Date)]
     public DateOnly? NgayNhapNgu { get; set; }
     [DisplayName("Ngày Xuất Ngũ ")]
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
+    [DataType(DataType.Date)]
     public DateOnly? NgayXuatNgu { get; set; }
     [DisplayName("Thương Binh Hạng ")]
     public int? IdThuongBinhHang { get; set; }
@@ -68,6 +85,7 @@ public partial class TbNguoi
     public int? IdTrinhDoTinHoc { get; set; }
 
     [DisplayName("Chức Danh Khoa Học Navigation ")]
+    //[ForeignKey("IdChucDanhKhoaHoc")]
     public virtual DmChucDanhKhoaHoc? IdChucDanhKhoaHocNavigation { get; set; }
     [DisplayName("Chuyên Môn Đào Tạo Navigation ")]
     public virtual DmNganhDaoTao? IdChuyenMonDaoTaoNavigation { get; set; }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using C500Hemis.Models.DM;
 
 namespace C500Hemis.Models;
@@ -20,6 +22,9 @@ public partial class TbDeAnDuAnChuongTrinh
 
     public DateOnly? ThoiGianHopTacDen { get; set; }
 
+    [Column(TypeName = "float")]
+    [DataType(DataType.Currency)]
+    [DisplayFormat(DataFormatString = "{0:C}")]
     public double? TongKinhPhi { get; set; }
 
     public int? IdNguonKinhPhiDeAnDuAnChuongTrinh { get; set; }
