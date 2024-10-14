@@ -22,76 +22,96 @@ namespace C500Hemis.Controllers.CB
         // GET: Nguoi
         public async Task<IActionResult> Index()
         {
-            var hemisContext = 
-                _context.TbNguois
-                .Include(t => t.IdChucDanhKhoaHocNavigation)
-                .Include(t => t.IdChuyenMonDaoTaoNavigation)
-                .Include(t => t.IdTonGiaoNavigation)
-                .Include(t => t.IdDanTocNavigation)
-                .Include(t => t.IdGiaDinhChinhSachNavigation)
-                .Include(t => t.IdGioiTinhNavigation)
-                .Include(t => t.IdKhungNangLucNgoaiNgucNavigation)
-                .Include(t => t.IdNgoaiNguNavigation)
-                .Include(t => t.IdQuocTichNavigation)
-                .Include(t => t.IdThuongBinhHangNavigation)
-                .Include(t => t.IdTrinhDoDaoTaoNavigation)
-                .Include(t => t.IdTrinhDoLyLuanChinhTriNavigation)
-                .Include(t => t.IdTrinhDoQuanLyNhaNuocNavigation)
-                .Include(t => t.IdTrinhDoTinHocNavigation);
-            return View(await hemisContext.ToListAsync());
+            try
+            {
+                List<TbNguoi> content = await
+                    _context.TbNguois
+                    .Include(t => t.IdChucDanhKhoaHocNavigation)
+                    .Include(t => t.IdChuyenMonDaoTaoNavigation)
+                    .Include(t => t.IdTonGiaoNavigation)
+                    .Include(t => t.IdDanTocNavigation)
+                    .Include(t => t.IdGiaDinhChinhSachNavigation)
+                    .Include(t => t.IdGioiTinhNavigation)
+                    .Include(t => t.IdKhungNangLucNgoaiNgucNavigation)
+                    .Include(t => t.IdNgoaiNguNavigation)
+                    .Include(t => t.IdQuocTichNavigation)
+                    .Include(t => t.IdThuongBinhHangNavigation)
+                    .Include(t => t.IdTrinhDoDaoTaoNavigation)
+                    .Include(t => t.IdTrinhDoLyLuanChinhTriNavigation)
+                    .Include(t => t.IdTrinhDoQuanLyNhaNuocNavigation)
+                    .Include(t => t.IdTrinhDoTinHocNavigation)
+                    .ToListAsync();
+                return View(content);
+            } catch(Exception ex)
+            {
+                return BadRequest();
+            }
         }
 
         // GET: Nguoi/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var tbNguoi = await _context.TbNguois
-                .Include(t => t.IdChucDanhKhoaHocNavigation)
-                .Include(t => t.IdChuyenMonDaoTaoNavigation)
-                .Include(t => t.IdTonGiaoNavigation)
-                .Include(t => t.IdDanTocNavigation)
-                .Include(t => t.IdGiaDinhChinhSachNavigation)
-                .Include(t => t.IdGioiTinhNavigation)
-                .Include(t => t.IdKhungNangLucNgoaiNgucNavigation)
-                .Include(t => t.IdNgoaiNguNavigation)
-                .Include(t => t.IdQuocTichNavigation)
-                .Include(t => t.IdThuongBinhHangNavigation)
-                .Include(t => t.IdTrinhDoDaoTaoNavigation)
-                .Include(t => t.IdTrinhDoLyLuanChinhTriNavigation)
-                .Include(t => t.IdTrinhDoQuanLyNhaNuocNavigation)
-                .Include(t => t.IdTrinhDoTinHocNavigation)
-                .FirstOrDefaultAsync(m => m.IdNguoi == id);
-            if (tbNguoi == null)
+                var tbNguoi = await _context.TbNguois
+                    .Include(t => t.IdChucDanhKhoaHocNavigation)
+                    .Include(t => t.IdChuyenMonDaoTaoNavigation)
+                    .Include(t => t.IdTonGiaoNavigation)
+                    .Include(t => t.IdDanTocNavigation)
+                    .Include(t => t.IdGiaDinhChinhSachNavigation)
+                    .Include(t => t.IdGioiTinhNavigation)
+                    .Include(t => t.IdKhungNangLucNgoaiNgucNavigation)
+                    .Include(t => t.IdNgoaiNguNavigation)
+                    .Include(t => t.IdQuocTichNavigation)
+                    .Include(t => t.IdThuongBinhHangNavigation)
+                    .Include(t => t.IdTrinhDoDaoTaoNavigation)
+                    .Include(t => t.IdTrinhDoLyLuanChinhTriNavigation)
+                    .Include(t => t.IdTrinhDoQuanLyNhaNuocNavigation)
+                    .Include(t => t.IdTrinhDoTinHocNavigation)
+                    .FirstOrDefaultAsync(m => m.IdNguoi == id);
+                if (tbNguoi == null)
+                {
+                    return NotFound();
+                }
+
+                return View(tbNguoi);
+            } catch (Exception ex)
             {
-                return NotFound();
+                return BadRequest();
             }
-
-            return View(tbNguoi);
         }
 
         // GET: Nguoi/Create
         public IActionResult Create()
         {
-            //value = DmChucDanhKhoaHoc.IdChucDanhKhoaHoc text = DmChucDanhKhoaHoc.ChucDanhKhoaHoc
-            ViewData["IdChucDanhKhoaHoc"] = new SelectList(_context.DmChucDanhKhoaHocs, "IdChucDanhKhoaHoc", "ChucDanhKhoaHoc");
-            ViewData["IdChuyenMonDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao");
-            ViewData["IdTonGiao"] = new SelectList(_context.DmTonGiaos, "IdTonGiao", "TonGiao");
-            ViewData["IdDanToc"] = new SelectList(_context.DmDanTocs, "IdDanToc", "DanToc");
-            ViewData["IdGiaDinhChinhSach"] = new SelectList(_context.DmHoGiaDinhChinhSaches, "IdHoGiaDinhChinhSach", "HoGiaDinhChinhSach");
-            ViewData["IdGioiTinh"] = new SelectList(_context.DmGioiTinhs, "IdGioiTinh", "GioiTinh");
-            ViewData["IdKhungNangLucNgoaiNguc"] = new SelectList(_context.DmKhungNangLucNgoaiNgus, "IdKhungNangLucNgoaiNgu", "TenKhungNangLucNgoaiNgu");
-            ViewData["IdNgoaiNgu"] = new SelectList(_context.DmNgoaiNgus, "IdNgoaiNgu", "NgoaiNgu");
-            ViewData["IdQuocTich"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "TenNuoc");
-            ViewData["IdThuongBinhHang"] = new SelectList(_context.DmHangThuongBinhs, "IdHangThuongBinh", "HangThuongBinh");
-            ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "TrinhDoDaoTao");
-            ViewData["IdTrinhDoLyLuanChinhTri"] = new SelectList(_context.DmTrinhDoLyLuanChinhTris, "IdTrinhDoLyLuanChinhTri", "TenTrinhDoLyLuanChinhTri");
-            ViewData["IdTrinhDoQuanLyNhaNuoc"] = new SelectList(_context.DmTrinhDoQuanLyNhaNuocs, "IdTrinhDoQuanLyNhaNuoc", "TrinhDoQuanLyNhaNuoc");
-            ViewData["IdTrinhDoTinHoc"] = new SelectList(_context.DmTrinhDoTinHocs, "IdTrinhDoTinHoc", "TrinhDoTinHoc");
-            return View();
+            try
+            {
+                //value = DmChucDanhKhoaHoc.IdChucDanhKhoaHoc text = DmChucDanhKhoaHoc.ChucDanhKhoaHoc
+                ViewData["IdChucDanhKhoaHoc"] = new SelectList(_context.DmChucDanhKhoaHocs, "IdChucDanhKhoaHoc", "ChucDanhKhoaHoc");
+                ViewData["IdChuyenMonDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao");
+                ViewData["IdTonGiao"] = new SelectList(_context.DmTonGiaos, "IdTonGiao", "TonGiao");
+                ViewData["IdDanToc"] = new SelectList(_context.DmDanTocs, "IdDanToc", "DanToc");
+                ViewData["IdGiaDinhChinhSach"] = new SelectList(_context.DmHoGiaDinhChinhSaches, "IdHoGiaDinhChinhSach", "HoGiaDinhChinhSach");
+                ViewData["IdGioiTinh"] = new SelectList(_context.DmGioiTinhs, "IdGioiTinh", "GioiTinh");
+                ViewData["IdKhungNangLucNgoaiNguc"] = new SelectList(_context.DmKhungNangLucNgoaiNgus, "IdKhungNangLucNgoaiNgu", "TenKhungNangLucNgoaiNgu");
+                ViewData["IdNgoaiNgu"] = new SelectList(_context.DmNgoaiNgus, "IdNgoaiNgu", "NgoaiNgu");
+                ViewData["IdQuocTich"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "TenNuoc");
+                ViewData["IdThuongBinhHang"] = new SelectList(_context.DmHangThuongBinhs, "IdHangThuongBinh", "HangThuongBinh");
+                ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "TrinhDoDaoTao");
+                ViewData["IdTrinhDoLyLuanChinhTri"] = new SelectList(_context.DmTrinhDoLyLuanChinhTris, "IdTrinhDoLyLuanChinhTri", "TenTrinhDoLyLuanChinhTri");
+                ViewData["IdTrinhDoQuanLyNhaNuoc"] = new SelectList(_context.DmTrinhDoQuanLyNhaNuocs, "IdTrinhDoQuanLyNhaNuoc", "TrinhDoQuanLyNhaNuoc");
+                ViewData["IdTrinhDoTinHoc"] = new SelectList(_context.DmTrinhDoTinHocs, "IdTrinhDoTinHoc", "TrinhDoTinHoc");
+                return View();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
 
         // POST: Nguoi/Create
@@ -101,58 +121,71 @@ namespace C500Hemis.Controllers.CB
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdNguoi,Ho,Ten,IdQuocTich,SoCccd,NgayCapCccd,NoiCapCccd,NgaySinh,IdGioiTinh,IdDanToc,IdTonGiao,NgayVaoDoan,NgayVaoDang,NgayVaoDangChinhThuc,NgayNhapNgu,NgayXuatNgu,IdThuongBinhHang,IdGiaDinhChinhSach,IdChucDanhKhoaHoc,IdTrinhDoDaoTao,IdChuyenMonDaoTao,IdNgoaiNgu,IdKhungNangLucNgoaiNguc,IdTrinhDoLyLuanChinhTri,IdTrinhDoQuanLyNhaNuoc,IdTrinhDoTinHoc")] TbNguoi tbNguoi)
         {
-            if (TbNguoiExists(tbNguoi.IdNguoi)) ModelState.AddModelError("IdNguoi", "Đã tồn tại");
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(tbNguoi);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (TbNguoiExists(tbNguoi.IdNguoi)) ModelState.AddModelError("IdNguoi", "Đã tồn tại!");
+                if (ModelState.IsValid)
+                {
+                    _context.Add(tbNguoi);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                ViewData["IdChucDanhKhoaHoc"] = new SelectList(_context.DmChucDanhKhoaHocs, "IdChucDanhKhoaHoc", "ChucDanhKhoaHoc", tbNguoi.IdChucDanhKhoaHoc);
+                ViewData["IdChuyenMonDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao", tbNguoi.IdChuyenMonDaoTao);
+                ViewData["IdTonGiao"] = new SelectList(_context.DmTonGiaos, "IdTonGiao", "TonGiao", tbNguoi.IdDanToc);
+                ViewData["IdDanToc"] = new SelectList(_context.DmDanTocs, "IdDanToc", "DanToc", tbNguoi.IdDanToc);
+                ViewData["IdGiaDinhChinhSach"] = new SelectList(_context.DmHoGiaDinhChinhSaches, "IdHoGiaDinhChinhSach", "HoGiaDinhChinhSach", tbNguoi.IdGiaDinhChinhSach);
+                ViewData["IdGioiTinh"] = new SelectList(_context.DmGioiTinhs, "IdGioiTinh", "GioiTinh", tbNguoi.IdGioiTinh);
+                ViewData["IdKhungNangLucNgoaiNguc"] = new SelectList(_context.DmKhungNangLucNgoaiNgus, "IdKhungNangLucNgoaiNgu", "TenKhungNangLucNgoaiNgu", tbNguoi.IdKhungNangLucNgoaiNguc);
+                ViewData["IdNgoaiNgu"] = new SelectList(_context.DmNgoaiNgus, "IdNgoaiNgu", "NgoaiNgu", tbNguoi.IdNgoaiNgu);
+                ViewData["IdQuocTich"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "TenNuoc", tbNguoi.IdQuocTich);
+                ViewData["IdThuongBinhHang"] = new SelectList(_context.DmHangThuongBinhs, "IdHangThuongBinh", "HangThuongBinh", tbNguoi.IdThuongBinhHang);
+                ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "TrinhDoDaoTao", tbNguoi.IdTrinhDoDaoTao);
+                ViewData["IdTrinhDoLyLuanChinhTri"] = new SelectList(_context.DmTrinhDoLyLuanChinhTris, "IdTrinhDoLyLuanChinhTri", "TenTrinhDoLyLuanChinhTri", tbNguoi.IdTrinhDoLyLuanChinhTri);
+                ViewData["IdTrinhDoQuanLyNhaNuoc"] = new SelectList(_context.DmTrinhDoQuanLyNhaNuocs, "IdTrinhDoQuanLyNhaNuoc", "TrinhDoQuanLyNhaNuoc", tbNguoi.IdTrinhDoQuanLyNhaNuoc);
+                ViewData["IdTrinhDoTinHoc"] = new SelectList(_context.DmTrinhDoTinHocs, "IdTrinhDoTinHoc", "TrinhDoTinHoc", tbNguoi.IdTrinhDoTinHoc);
+                return View(tbNguoi);
             }
-            ViewData["IdChucDanhKhoaHoc"] = new SelectList(_context.DmChucDanhKhoaHocs, "IdChucDanhKhoaHoc", "ChucDanhKhoaHoc", tbNguoi.IdChucDanhKhoaHoc);
-            ViewData["IdChuyenMonDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao", tbNguoi.IdChuyenMonDaoTao);
-            ViewData["IdTonGiao"] = new SelectList(_context.DmTonGiaos, "IdTonGiao", "TonGiao", tbNguoi.IdDanToc);
-            ViewData["IdDanToc"] = new SelectList(_context.DmDanTocs, "IdDanToc", "DanToc", tbNguoi.IdDanToc);
-            ViewData["IdGiaDinhChinhSach"] = new SelectList(_context.DmHoGiaDinhChinhSaches, "IdHoGiaDinhChinhSach", "HoGiaDinhChinhSach", tbNguoi.IdGiaDinhChinhSach);
-            ViewData["IdGioiTinh"] = new SelectList(_context.DmGioiTinhs, "IdGioiTinh", "GioiTinh", tbNguoi.IdGioiTinh);
-            ViewData["IdKhungNangLucNgoaiNguc"] = new SelectList(_context.DmKhungNangLucNgoaiNgus, "IdKhungNangLucNgoaiNgu", "TenKhungNangLucNgoaiNgu", tbNguoi.IdKhungNangLucNgoaiNguc);
-            ViewData["IdNgoaiNgu"] = new SelectList(_context.DmNgoaiNgus, "IdNgoaiNgu", "NgoaiNgu", tbNguoi.IdNgoaiNgu);
-            ViewData["IdQuocTich"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "TenNuoc", tbNguoi.IdQuocTich);
-            ViewData["IdThuongBinhHang"] = new SelectList(_context.DmHangThuongBinhs, "IdHangThuongBinh", "HangThuongBinh", tbNguoi.IdThuongBinhHang);
-            ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "TrinhDoDaoTao", tbNguoi.IdTrinhDoDaoTao);
-            ViewData["IdTrinhDoLyLuanChinhTri"] = new SelectList(_context.DmTrinhDoLyLuanChinhTris, "IdTrinhDoLyLuanChinhTri", "TenTrinhDoLyLuanChinhTri", tbNguoi.IdTrinhDoLyLuanChinhTri);
-            ViewData["IdTrinhDoQuanLyNhaNuoc"] = new SelectList(_context.DmTrinhDoQuanLyNhaNuocs, "IdTrinhDoQuanLyNhaNuoc", "TrinhDoQuanLyNhaNuoc", tbNguoi.IdTrinhDoQuanLyNhaNuoc);
-            ViewData["IdTrinhDoTinHoc"] = new SelectList(_context.DmTrinhDoTinHocs, "IdTrinhDoTinHoc", "TrinhDoTinHoc", tbNguoi.IdTrinhDoTinHoc);
-            return View(tbNguoi);
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
 
         // GET: Nguoi/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var tbNguoi = await _context.TbNguois.FindAsync(id);
-            if (tbNguoi == null)
+                var tbNguoi = await _context.TbNguois.FindAsync(id);
+                if (tbNguoi == null)
+                {
+                    return NotFound();
+                }
+                ViewData["IdChucDanhKhoaHoc"] = new SelectList(_context.DmChucDanhKhoaHocs, "IdChucDanhKhoaHoc", "ChucDanhKhoaHoc", tbNguoi.IdChucDanhKhoaHoc);
+                ViewData["IdChuyenMonDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao", tbNguoi.IdChuyenMonDaoTao);
+                ViewData["IdTonGiao"] = new SelectList(_context.DmTonGiaos, "IdTonGiao", "TonGiao", tbNguoi.IdDanToc);
+                ViewData["IdDanToc"] = new SelectList(_context.DmDanTocs, "IdDanToc", "DanToc", tbNguoi.IdDanToc);
+                ViewData["IdGiaDinhChinhSach"] = new SelectList(_context.DmHoGiaDinhChinhSaches, "IdHoGiaDinhChinhSach", "HoGiaDinhChinhSach", tbNguoi.IdGiaDinhChinhSach);
+                ViewData["IdGioiTinh"] = new SelectList(_context.DmGioiTinhs, "IdGioiTinh", "GioiTinh", tbNguoi.IdGioiTinh);
+                ViewData["IdKhungNangLucNgoaiNguc"] = new SelectList(_context.DmKhungNangLucNgoaiNgus, "IdKhungNangLucNgoaiNgu", "TenKhungNangLucNgoaiNgu", tbNguoi.IdKhungNangLucNgoaiNguc);
+                ViewData["IdNgoaiNgu"] = new SelectList(_context.DmNgoaiNgus, "IdNgoaiNgu", "NgoaiNgu", tbNguoi.IdNgoaiNgu);
+                ViewData["IdQuocTich"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "TenNuoc", tbNguoi.IdQuocTich);
+                ViewData["IdThuongBinhHang"] = new SelectList(_context.DmHangThuongBinhs, "IdHangThuongBinh", "HangThuongBinh", tbNguoi.IdThuongBinhHang);
+                ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "TrinhDoDaoTao", tbNguoi.IdTrinhDoDaoTao);
+                ViewData["IdTrinhDoLyLuanChinhTri"] = new SelectList(_context.DmTrinhDoLyLuanChinhTris, "IdTrinhDoLyLuanChinhTri", "TenTrinhDoLyLuanChinhTri", tbNguoi.IdTrinhDoLyLuanChinhTri);
+                ViewData["IdTrinhDoQuanLyNhaNuoc"] = new SelectList(_context.DmTrinhDoQuanLyNhaNuocs, "IdTrinhDoQuanLyNhaNuoc", "TrinhDoQuanLyNhaNuoc", tbNguoi.IdTrinhDoQuanLyNhaNuoc);
+                ViewData["IdTrinhDoTinHoc"] = new SelectList(_context.DmTrinhDoTinHocs, "IdTrinhDoTinHoc", "TrinhDoTinHoc", tbNguoi.IdTrinhDoTinHoc);
+                return View(tbNguoi);
+            } catch(Exception ex)
             {
-                return NotFound();
+                return BadRequest();
             }
-            ViewData["IdChucDanhKhoaHoc"] = new SelectList(_context.DmChucDanhKhoaHocs, "IdChucDanhKhoaHoc", "IdChucDanhKhoaHoc", tbNguoi.IdChucDanhKhoaHoc);
-            ViewData["IdChuyenMonDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "IdNganhDaoTao", tbNguoi.IdChuyenMonDaoTao);
-            ViewData["IdTonGiao"] = new SelectList(_context.DmTonGiaos, "IdTonGiao", "IdTonGiao", tbNguoi.IdDanToc);
-            ViewData["IdDanToc"] = new SelectList(_context.DmDanTocs, "IdDanToc", "IdDanToc", tbNguoi.IdDanToc);
-            ViewData["IdGiaDinhChinhSach"] = new SelectList(_context.DmHoGiaDinhChinhSaches, "IdHoGiaDinhChinhSach", "IdHoGiaDinhChinhSach", tbNguoi.IdGiaDinhChinhSach);
-            ViewData["IdGioiTinh"] = new SelectList(_context.DmGioiTinhs, "IdGioiTinh", "IdGioiTinh", tbNguoi.IdGioiTinh);
-            ViewData["IdKhungNangLucNgoaiNguc"] = new SelectList(_context.DmKhungNangLucNgoaiNgus, "IdKhungNangLucNgoaiNgu", "IdKhungNangLucNgoaiNgu", tbNguoi.IdKhungNangLucNgoaiNguc);
-            ViewData["IdNgoaiNgu"] = new SelectList(_context.DmNgoaiNgus, "IdNgoaiNgu", "IdNgoaiNgu", tbNguoi.IdNgoaiNgu);
-            ViewData["IdQuocTich"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "IdQuocTich", tbNguoi.IdQuocTich);
-            ViewData["IdThuongBinhHang"] = new SelectList(_context.DmHangThuongBinhs, "IdHangThuongBinh", "IdHangThuongBinh", tbNguoi.IdThuongBinhHang);
-            ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "IdTrinhDoDaoTao", tbNguoi.IdTrinhDoDaoTao);
-            ViewData["IdTrinhDoLyLuanChinhTri"] = new SelectList(_context.DmTrinhDoLyLuanChinhTris, "IdTrinhDoLyLuanChinhTri", "IdTrinhDoLyLuanChinhTri", tbNguoi.IdTrinhDoLyLuanChinhTri);
-            ViewData["IdTrinhDoQuanLyNhaNuoc"] = new SelectList(_context.DmTrinhDoQuanLyNhaNuocs, "IdTrinhDoQuanLyNhaNuoc", "IdTrinhDoQuanLyNhaNuoc", tbNguoi.IdTrinhDoQuanLyNhaNuoc);
-            ViewData["IdTrinhDoTinHoc"] = new SelectList(_context.DmTrinhDoTinHocs, "IdTrinhDoTinHoc", "IdTrinhDoTinHoc", tbNguoi.IdTrinhDoTinHoc);
-            return View(tbNguoi);
         }
 
         // POST: Nguoi/Edit/5
@@ -162,78 +195,92 @@ namespace C500Hemis.Controllers.CB
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdNguoi,Ho,Ten,IdQuocTich,SoCccd,NgayCapCccd,NoiCapCccd,NgaySinh,IdGioiTinh,IdDanToc,IdTonGiao,NgayVaoDoan,NgayVaoDang,NgayVaoDangChinhThuc,NgayNhapNgu,NgayXuatNgu,IdThuongBinhHang,IdGiaDinhChinhSach,IdChucDanhKhoaHoc,IdTrinhDoDaoTao,IdChuyenMonDaoTao,IdNgoaiNgu,IdKhungNangLucNgoaiNguc,IdTrinhDoLyLuanChinhTri,IdTrinhDoQuanLyNhaNuoc,IdTrinhDoTinHoc")] TbNguoi tbNguoi)
         {
-            if (id != tbNguoi.IdNguoi)
+            try
             {
-                return NotFound();
-            }
+                if (id != tbNguoi.IdNguoi)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(tbNguoi);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TbNguoiExists(tbNguoi.IdNguoi))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(tbNguoi);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!TbNguoiExists(tbNguoi.IdNguoi))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                ViewData["IdChucDanhKhoaHoc"] = new SelectList(_context.DmChucDanhKhoaHocs, "IdChucDanhKhoaHoc", "ChucDanhKhoaHoc", tbNguoi.IdChucDanhKhoaHoc);
+                ViewData["IdChuyenMonDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao", tbNguoi.IdChuyenMonDaoTao);
+                ViewData["IdTonGiao"] = new SelectList(_context.DmTonGiaos, "IdTonGiao", "TonGiao", tbNguoi.IdDanToc);
+                ViewData["IdDanToc"] = new SelectList(_context.DmDanTocs, "IdDanToc", "DanToc", tbNguoi.IdDanToc);
+                ViewData["IdGiaDinhChinhSach"] = new SelectList(_context.DmHoGiaDinhChinhSaches, "IdHoGiaDinhChinhSach", "HoGiaDinhChinhSach", tbNguoi.IdGiaDinhChinhSach);
+                ViewData["IdGioiTinh"] = new SelectList(_context.DmGioiTinhs, "IdGioiTinh", "GioiTinh", tbNguoi.IdGioiTinh);
+                ViewData["IdKhungNangLucNgoaiNguc"] = new SelectList(_context.DmKhungNangLucNgoaiNgus, "IdKhungNangLucNgoaiNgu", "TenKhungNangLucNgoaiNgu", tbNguoi.IdKhungNangLucNgoaiNguc);
+                ViewData["IdNgoaiNgu"] = new SelectList(_context.DmNgoaiNgus, "IdNgoaiNgu", "NgoaiNgu", tbNguoi.IdNgoaiNgu);
+                ViewData["IdQuocTich"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "TenNuoc", tbNguoi.IdQuocTich);
+                ViewData["IdThuongBinhHang"] = new SelectList(_context.DmHangThuongBinhs, "IdHangThuongBinh", "HangThuongBinh", tbNguoi.IdThuongBinhHang);
+                ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "TrinhDoDaoTao", tbNguoi.IdTrinhDoDaoTao);
+                ViewData["IdTrinhDoLyLuanChinhTri"] = new SelectList(_context.DmTrinhDoLyLuanChinhTris, "IdTrinhDoLyLuanChinhTri", "TenTrinhDoLyLuanChinhTri", tbNguoi.IdTrinhDoLyLuanChinhTri);
+                ViewData["IdTrinhDoQuanLyNhaNuoc"] = new SelectList(_context.DmTrinhDoQuanLyNhaNuocs, "IdTrinhDoQuanLyNhaNuoc", "TrinhDoQuanLyNhaNuoc", tbNguoi.IdTrinhDoQuanLyNhaNuoc);
+                ViewData["IdTrinhDoTinHoc"] = new SelectList(_context.DmTrinhDoTinHocs, "IdTrinhDoTinHoc", "TrinhDoTinHoc", tbNguoi.IdTrinhDoTinHoc);
+                return View(tbNguoi);
             }
-            ViewData["IdChucDanhKhoaHoc"] = new SelectList(_context.DmChucDanhKhoaHocs, "IdChucDanhKhoaHoc", "IdChucDanhKhoaHoc", tbNguoi.IdChucDanhKhoaHoc);
-            ViewData["IdChuyenMonDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "IdNganhDaoTao", tbNguoi.IdChuyenMonDaoTao);
-            ViewData["IdTonGiao"] = new SelectList(_context.DmTonGiaos, "IdTonGiao", "IdTonGiao", tbNguoi.IdDanToc);
-            ViewData["IdDanToc"] = new SelectList(_context.DmDanTocs, "IdDanToc", "IdDanToc", tbNguoi.IdDanToc);
-            ViewData["IdGiaDinhChinhSach"] = new SelectList(_context.DmHoGiaDinhChinhSaches, "IdHoGiaDinhChinhSach", "IdHoGiaDinhChinhSach", tbNguoi.IdGiaDinhChinhSach);
-            ViewData["IdGioiTinh"] = new SelectList(_context.DmGioiTinhs, "IdGioiTinh", "IdGioiTinh", tbNguoi.IdGioiTinh);
-            ViewData["IdKhungNangLucNgoaiNguc"] = new SelectList(_context.DmKhungNangLucNgoaiNgus, "IdKhungNangLucNgoaiNgu", "IdKhungNangLucNgoaiNgu", tbNguoi.IdKhungNangLucNgoaiNguc);
-            ViewData["IdNgoaiNgu"] = new SelectList(_context.DmNgoaiNgus, "IdNgoaiNgu", "IdNgoaiNgu", tbNguoi.IdNgoaiNgu);
-            ViewData["IdQuocTich"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "IdQuocTich", tbNguoi.IdQuocTich);
-            ViewData["IdThuongBinhHang"] = new SelectList(_context.DmHangThuongBinhs, "IdHangThuongBinh", "IdHangThuongBinh", tbNguoi.IdThuongBinhHang);
-            ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "IdTrinhDoDaoTao", tbNguoi.IdTrinhDoDaoTao);
-            ViewData["IdTrinhDoLyLuanChinhTri"] = new SelectList(_context.DmTrinhDoLyLuanChinhTris, "IdTrinhDoLyLuanChinhTri", "IdTrinhDoLyLuanChinhTri", tbNguoi.IdTrinhDoLyLuanChinhTri);
-            ViewData["IdTrinhDoQuanLyNhaNuoc"] = new SelectList(_context.DmTrinhDoQuanLyNhaNuocs, "IdTrinhDoQuanLyNhaNuoc", "IdTrinhDoQuanLyNhaNuoc", tbNguoi.IdTrinhDoQuanLyNhaNuoc);
-            ViewData["IdTrinhDoTinHoc"] = new SelectList(_context.DmTrinhDoTinHocs, "IdTrinhDoTinHoc", "IdTrinhDoTinHoc", tbNguoi.IdTrinhDoTinHoc);
-            return View(tbNguoi);
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
 
         // GET: Nguoi/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var tbNguoi = await _context.TbNguois
-                .Include(t => t.IdChucDanhKhoaHocNavigation)
-                .Include(t => t.IdChuyenMonDaoTaoNavigation)
-                .Include(t => t.IdTonGiaoNavigation)
-                .Include(t => t.IdDanTocNavigation)
-                .Include(t => t.IdGiaDinhChinhSachNavigation)
-                .Include(t => t.IdGioiTinhNavigation)
-                .Include(t => t.IdKhungNangLucNgoaiNgucNavigation)
-                .Include(t => t.IdNgoaiNguNavigation)
-                .Include(t => t.IdQuocTichNavigation)
-                .Include(t => t.IdThuongBinhHangNavigation)
-                .Include(t => t.IdTrinhDoDaoTaoNavigation)
-                .Include(t => t.IdTrinhDoLyLuanChinhTriNavigation)
-                .Include(t => t.IdTrinhDoQuanLyNhaNuocNavigation)
-                .Include(t => t.IdTrinhDoTinHocNavigation)
-                .FirstOrDefaultAsync(m => m.IdNguoi == id);
-            if (tbNguoi == null)
+                var tbNguoi = await _context.TbNguois
+                    .Include(t => t.IdChucDanhKhoaHocNavigation)
+                    .Include(t => t.IdChuyenMonDaoTaoNavigation)
+                    .Include(t => t.IdTonGiaoNavigation)
+                    .Include(t => t.IdDanTocNavigation)
+                    .Include(t => t.IdGiaDinhChinhSachNavigation)
+                    .Include(t => t.IdGioiTinhNavigation)
+                    .Include(t => t.IdKhungNangLucNgoaiNgucNavigation)
+                    .Include(t => t.IdNgoaiNguNavigation)
+                    .Include(t => t.IdQuocTichNavigation)
+                    .Include(t => t.IdThuongBinhHangNavigation)
+                    .Include(t => t.IdTrinhDoDaoTaoNavigation)
+                    .Include(t => t.IdTrinhDoLyLuanChinhTriNavigation)
+                    .Include(t => t.IdTrinhDoQuanLyNhaNuocNavigation)
+                    .Include(t => t.IdTrinhDoTinHocNavigation)
+                    .FirstOrDefaultAsync(m => m.IdNguoi == id);
+                if (tbNguoi == null)
+                {
+                    return NotFound();
+                }
+
+                return View(tbNguoi);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return BadRequest();
             }
-
-            return View(tbNguoi);
         }
 
         // POST: Nguoi/Delete/5
@@ -241,14 +288,21 @@ namespace C500Hemis.Controllers.CB
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var tbNguoi = await _context.TbNguois.FindAsync(id);
-            if (tbNguoi != null)
+            try
             {
-                _context.TbNguois.Remove(tbNguoi);
-            }
+                var tbNguoi = await _context.TbNguois.FindAsync(id);
+                if (tbNguoi != null)
+                {
+                    _context.TbNguois.Remove(tbNguoi);
+                }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
 
         private bool TbNguoiExists(int id)
