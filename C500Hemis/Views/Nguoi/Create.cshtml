@@ -33,7 +33,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="IdQuocTich" class="control-label"></label>
-                <select asp-for="IdQuocTich" class ="form-control" asp-items="ViewBag.IdQuocTich"></select>
+                <select asp-for="IdQuocTich" hidden="hidden" class ="form-control" asp-items="ViewBag.IdQuocTich"></select>
             </div>
             <div class="form-group">
                 <label asp-for="SoCccd" class="control-label"></label>
@@ -142,12 +142,43 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+@*Tạo tìm kiếm cho select list dùng datalist*@
+<script>
+    var select = document.querySelectorAll("select");
+    var data = {};
+    for (var i = 0; i < select.length; ++i) {
+        select[i].hidden = true;
+        let cr = {};
+        let idlist = "datalist" + i.toString();
+        let input = document.createElement("input");
+        let datalist = document.createElement("datalist");
+        let options = select[i].options;
+        input.className = "form-control";
+        input.setAttribute("list", idlist);
+        input.setAttribute("selid", select[i].id);
+        input.addEventListener("change", function (e) {
+            try {
+                let selid = e.target.getAttribute("selid");
+                console.log(selid);
+                console.log(data[selid][e.target.value]);
+                document.getElementById(selid).selectedIndex = data[selid][e.target.value];
+            } catch(ex) {
+
+            }
+        });
+        for (var j = 0; j < options.length; ++j) {
+            cr[options[j].text] = j;
+            let option = document.createElement("option");
+            option.value = options[j].text;
+            datalist.appendChild(option);
+        }
+        datalist.id = idlist;
+        data[select[i].id] = cr;
+        select[i].after(input, datalist);
+    }
+</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script>
-        $("#IdQuocTich").select2();
-    </script>
-
 }
