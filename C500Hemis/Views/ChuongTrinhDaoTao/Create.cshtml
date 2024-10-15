@@ -145,18 +145,29 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
-        
+        // Áp dụng Select2 cho các trường thông tin tìm kiếm số lượng lớn
         $(document).ready(function () {
-            // Áp dụng Select2 cho IdNganhDaoTao (Ngành đào tạo)
+            
             $("#IdNganhDaoTao").select2({
-                placeholder: "Vui lòng nhập đúng tên ngành đào tạo...",
+                placeholder: "Tìm kiếm ngành đào tạo...",
                 allowClear: true
             });
 
-            $('#IdLoaiChuongTrinhDaoTao').select2({
+            $("#IdLoaiChuongTrinhDaoTao").select2({
                 placeholder: "Tìm kiếm loại chương trình...",
                 allowClear: true
             });
+
+            $('#IdQuocGiaCuaTruSoChinh').select2({
+                placeholder: "Tìm kiếm quốc gia...",
+                allowClear: true
+            });
+
+            $('#IdTrinhDoDaoTao').select2({
+                placeholder: "Tìm kiếm trình độ đào tạo...",
+                allowClear: true
+            });
+         
         });
          
 
