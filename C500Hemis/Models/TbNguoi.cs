@@ -18,7 +18,8 @@ public partial class TbNguoi
     [DisplayName("Tên ")]
     public string? Ten { get; set; }
 
-    //ForeignKey trỏ vào table [DM].[dmQuocTich] - chỉ thao tác ở backend không hiển ra ngoài frontend
+    //ForeignKey trỏ vào table [DM].[dmQuocTich]
+    [DisplayName("Quốc tịch")]
     public int? IdQuocTich { get; set; }
     
     [DisplayName("Số CCCD ")]
@@ -37,13 +38,16 @@ public partial class TbNguoi
     [DataType(DataType.Date)]
     public DateOnly? NgaySinh { get; set; }
 
-    //ForeignKey trỏ vào table [DM].[dmGioiTinh] - chỉ thao tác ở backend không hiển ra ngoài frontend
+    //ForeignKey trỏ vào table [DM].[dmGioiTinh]
+    [DisplayName("Giới tính")]
     public int? IdGioiTinh { get; set; }
 
-    //ForeignKey trỏ vào table [DM].[dmDanToc] - chỉ thao tác ở backend không hiển ra ngoài frontend
+    //ForeignKey trỏ vào table [DM].[dmDanToc]
+    [DisplayName("Dân tộc")]
     public int? IdDanToc { get; set; }
 
-    //ForeignKey trỏ vào table [DM].[dmTonGiao] - chỉ thao tác ở backend không hiển ra ngoài frontend
+    //ForeignKey trỏ vào table [DM].[dmTonGiao]
+    [DisplayName("Tôn giáo")]
     public int? IdTonGiao { get; set; }
 
     [DisplayName("Ngày Vào Đoàn ")]
@@ -71,35 +75,44 @@ public partial class TbNguoi
     [DataType(DataType.Date)]
     public DateOnly? NgayXuatNgu { get; set; }
 
-    //ForeignKey trỏ vào table [DM].[dmHangThuongBinh] - chỉ thao tác ở backend không hiển ra ngoài frontend
+    //ForeignKey trỏ vào table [DM].[dmHangThuongBinh]
+    [DisplayName("Hạng thương binh")]
     public int? IdThuongBinhHang { get; set; }
-    [DisplayName("Gia Đình Chính Sách ")]
 
-    //ForeignKey trỏ vào table [DM].[dmHoGiaDinhChinhSach] - chỉ thao tác ở backend không hiển ra ngoài frontend
+    //ForeignKey trỏ vào table [DM].[dmHoGiaDinhChinhSach]
+    [DisplayName("Gia Đình Chính Sách ")]
     public int? IdGiaDinhChinhSach { get; set; }
 
-    //ForeignKey trỏ vào table [DM].[dmChucDanhKhoaHoc] - chỉ thao tác ở backend không hiển ra ngoài frontend
+    //ForeignKey trỏ vào table [DM].[dmChucDanhKhoaHoc]
+    [DisplayName("Chức danh khoa học ")]
     public int? IdChucDanhKhoaHoc { get; set; }
 
-    //ForeignKey trỏ vào table [DM].[dmTrinhDoDaoTao] - chỉ thao tác ở backend không hiển ra ngoài frontend
+    //ForeignKey trỏ vào table [DM].[dmTrinhDoDaoTao] 
+    [DisplayName("Trình độ đào tạo ")]
     public int? IdTrinhDoDaoTao { get; set; }
 
-    //ForeignKey trỏ vào table [DM].[dmNganhDaoTao] - chỉ thao tác ở backend không hiển ra ngoài frontend    
+    //ForeignKey trỏ vào table [DM].[dmNganhDaoTao]
+    [DisplayName("Chuyên môn đào tạo ")]
     public int? IdChuyenMonDaoTao { get; set; }
 
-    //ForeignKey trỏ vào table [DM].[dmNgoaiNgu] - chỉ thao tác ở backend không hiển ra ngoài frontend
+    //ForeignKey trỏ vào table [DM].[dmNgoaiNgu] 
+    [DisplayName("Ngoại ngữ ")]
     public int? IdNgoaiNgu { get; set; }
 
-    //ForeignKey trỏ vào table [DM].[dmKhungNangLucNgoaiNgu] - chỉ thao tác ở backend không hiển ra ngoài frontend
+    //ForeignKey trỏ vào table [DM].[dmKhungNangLucNgoaiNgu] 
+    [DisplayName("Khung năng lực ngoại ngữ ")]
     public int? IdKhungNangLucNgoaiNguc { get; set; }
 
-    //ForeignKey trỏ vào table [DM].[dmTrinhDoLyLuanChinhTri] - chỉ thao tác ở backend không hiển ra ngoài frontend
+    //ForeignKey trỏ vào table [DM].[dmTrinhDoLyLuanChinhTri] 
+    [DisplayName("Trình độ lý luận chính trị ")]
     public int? IdTrinhDoLyLuanChinhTri { get; set; }
 
-    //ForeignKey trỏ vào table [DM].[dmTrinhDoQuanLyNhaNuoc] - chỉ thao tác ở backend không hiển ra ngoài frontend
+    //ForeignKey trỏ vào table [DM].[dmTrinhDoQuanLyNhaNuoc] 
+    [DisplayName("Trình độ quản lý nhà nước ")]
     public int? IdTrinhDoQuanLyNhaNuoc { get; set; }
 
-    //ForeignKey trỏ vào table [DM].[dmTrinhDoTinHoc] - chỉ thao tác ở backend không hiển ra ngoài frontend
+    //ForeignKey trỏ vào table [DM].[dmTrinhDoTinHoc] 
+    [DisplayName("Trình độ tin học ")]
     public int? IdTrinhDoTinHoc { get; set; }
 
     [DisplayName("Chức Danh KH")]
@@ -144,16 +157,16 @@ public partial class TbNguoi
     [DisplayName("Trình Độ Tin Học")]
     public virtual DmTrinhDoTinHoc? IdTrinhDoTinHocNavigation { get; set; }
 
-    [DisplayName("Cán Bộ")]
+    [DisplayName("Danh sách Cán Bộ")]
     public virtual ICollection<TbCanBo> TbCanBos { get; set; } = new List<TbCanBo>();
 
-    [DisplayName("Đối Tượng Tham Gia")]
+    [DisplayName("Danh sách Đối Tượng Tham Gia")]
     public virtual ICollection<TbDoiTuongThamGium> TbDoiTuongThamGia { get; set; } = new List<TbDoiTuongThamGium>();
 
-    [DisplayName("Học Viên")]
+    [DisplayName("Danh sách Học Viên")]
     public virtual ICollection<TbHocVien> TbHocViens { get; set; } = new List<TbHocVien>();
 
     [NotMapped]
-    [DisplayName("Họ Tên")]
+    [DisplayName("Họ Tên")]//Lấy họ tên của người
     public string name { get => Ho + " " + Ten; }
 }

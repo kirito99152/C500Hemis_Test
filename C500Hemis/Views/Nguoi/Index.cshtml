@@ -7,6 +7,10 @@
 @section Heads{
     <link href="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-2.1.7/r-3.0.3/datatables.min.css" rel="stylesheet">
     <style>
+        a:visited, a:link, a:hover {
+            text-decoration: none;
+            color: inherit;
+        }
         #views {
             border-collapse: collapse;
             border: 2px solid #ddd;
@@ -186,9 +190,9 @@
                 @Html.DisplayFor(modelItem => item.IdTrinhDoTinHocNavigation.TrinhDoTinHoc)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdNguoi">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdNguoi">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdNguoi">Delete</a>
+                <button class="btn btn-primary"><a asp-action="Edit" asp-route-id="@item.IdNguoi">Edit</a> </button>
+                <button class="btn btn-primary"><a asp-action="Details" asp-route-id="@item.IdNguoi">Details</a></button>
+                <button class="btn btn-danger"><a asp-action="Delete" asp-route-id="@item.IdNguoi">Delete</a></button>
             </td>
         </tr>
 }

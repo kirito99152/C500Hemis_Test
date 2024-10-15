@@ -14,16 +14,20 @@ namespace C500Hemis.Controllers.CB
     {
         private readonly HemisContext _context;
 
+        //Nhận HemisContext truyền từ service
         public NguoiController(HemisContext context)
         {
             _context = context;
         }
 
-        // GET: Nguoi
+        //GET: /Nguoi | /Nguoi/Index
+        // Thu thập các dữ liệu cần thiết của table TbNguoi để trả về hiển thị trên trang index
         public async Task<IActionResult> Index()
         {
+            //Bắt lổi
             try
             {
+                
                 List<TbNguoi> content = await
                     _context.TbNguois
                     .Include(t => t.IdChucDanhKhoaHocNavigation)
@@ -44,20 +48,25 @@ namespace C500Hemis.Controllers.CB
                 return View(content);
             } catch(Exception ex)
             {
+                // trả về HTTP Bad request 400
                 return BadRequest();
             }
         }
 
-        // GET: Nguoi/Details/5
+        //GET: /Nguoi/Details
+        // Thu thập thông tin chi tiết của người với Id cụ thể để trả về hiện thị ở Details
         public async Task<IActionResult> Details(int? id)
         {
+            //Bắt lổi
             try
             {
                 if (id == null)
                 {
                     return NotFound();
                 }
-
+                //Tìm người cần trả về
+                //Include là tìm các model cần thiết cho model TbNguoi
+                //theo relationship được cài đặt trong HemisContext.cs qua FOREIGN KEY Constraint trong database 
                 var tbNguoi = await _context.TbNguois
                     .Include(t => t.IdChucDanhKhoaHocNavigation)
                     .Include(t => t.IdChuyenMonDaoTaoNavigation)
@@ -78,10 +87,11 @@ namespace C500Hemis.Controllers.CB
                 {
                     return NotFound();
                 }
-
+                //Nếu tồn tại trả về View Details
                 return View(tbNguoi);
             } catch (Exception ex)
             {
+                // trả về HTTP Bad request 400
                 return BadRequest();
             }
         }
@@ -89,9 +99,15 @@ namespace C500Hemis.Controllers.CB
         // GET: Nguoi/Create
         public IActionResult Create()
         {
+            //Bắt lổi
             try
             {
-                //value = DmChucDanhKhoaHoc.IdChucDanhKhoaHoc text = DmChucDanhKhoaHoc.ChucDanhKhoaHoc
+                //SelectList phục vụ cho việc nhập dữ liệu cho các ForeignKey
+                //Mô hình selectlist(List<model>, ValueField, TextField)
+                //ValueField, TextField đều là tên attribute của model
+                //ValueField là tên attribute cần client nhập để lấy dữ liệu
+                //TextField là tên attribute muốn hiển thị cho client
+                //Vd model DmChucDanhKhoaHoc thì ValueField là IdChucDanhKhoaHoc tương đương DmChucDanhKhoaHoc.IdChucDanhKhoaHoc
                 ViewData["IdChucDanhKhoaHoc"] = new SelectList(_context.DmChucDanhKhoaHocs, "IdChucDanhKhoaHoc", "ChucDanhKhoaHoc");
                 ViewData["IdChuyenMonDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao");
                 ViewData["IdTonGiao"] = new SelectList(_context.DmTonGiaos, "IdTonGiao", "TonGiao");
@@ -110,26 +126,28 @@ namespace C500Hemis.Controllers.CB
             }
             catch (Exception ex)
             {
+                // trả về HTTP Bad request 400
                 return BadRequest();
             }
         }
 
-        // POST: Nguoi/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        //POST: /Nguoi/Create
+        [HttpPost]//Để action Khớp với POST HTTP 
+        [ValidateAntiForgeryToken]//Ngăn chặn Cross-Site Request Forgery qua Token verification (Đối chiếu với token được gửi bởi client mà trước đó được inject ở Form qua TagHelper) 
         public async Task<IActionResult> Create([Bind("IdNguoi,Ho,Ten,IdQuocTich,SoCccd,NgayCapCccd,NoiCapCccd,NgaySinh,IdGioiTinh,IdDanToc,IdTonGiao,NgayVaoDoan,NgayVaoDang,NgayVaoDangChinhThuc,NgayNhapNgu,NgayXuatNgu,IdThuongBinhHang,IdGiaDinhChinhSach,IdChucDanhKhoaHoc,IdTrinhDoDaoTao,IdChuyenMonDaoTao,IdNgoaiNgu,IdKhungNangLucNgoaiNguc,IdTrinhDoLyLuanChinhTri,IdTrinhDoQuanLyNhaNuoc,IdTrinhDoTinHoc")] TbNguoi tbNguoi)
         {
             try
             {
+                //Kiểm tra xem đã tồn tại IdNguoi chưa nếu tồn tại thêm ModelError cho IdNguoi
                 if (TbNguoiExists(tbNguoi.IdNguoi)) ModelState.AddModelError("IdNguoi", "Đã tồn tại!");
                 if (ModelState.IsValid)
                 {
+                    //Không trùng INSERT vào TABLE qua method ADD của HemisContext (EF)
                     _context.Add(tbNguoi);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
+                //Mô hình giải thích ở phía trên chỉ khác biệt ở chổ có thêm phần value của selectlist mà đang được chọn
                 ViewData["IdChucDanhKhoaHoc"] = new SelectList(_context.DmChucDanhKhoaHocs, "IdChucDanhKhoaHoc", "ChucDanhKhoaHoc", tbNguoi.IdChucDanhKhoaHoc);
                 ViewData["IdChuyenMonDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao", tbNguoi.IdChuyenMonDaoTao);
                 ViewData["IdTonGiao"] = new SelectList(_context.DmTonGiaos, "IdTonGiao", "TonGiao", tbNguoi.IdDanToc);
@@ -153,6 +171,7 @@ namespace C500Hemis.Controllers.CB
         }
 
         // GET: Nguoi/Edit/5
+        //Chỉnh sửa thông tin 
         public async Task<IActionResult> Edit(int? id)
         {
             try
@@ -161,12 +180,13 @@ namespace C500Hemis.Controllers.CB
                 {
                     return NotFound();
                 }
-
+                //Tìm model người khớp với Id được cung cấp
                 var tbNguoi = await _context.TbNguois.FindAsync(id);
                 if (tbNguoi == null)
                 {
                     return NotFound();
                 }
+                //Nếu tìm thấy khởi tạo các giá trị các giá trị cần thiết và trả về view
                 ViewData["IdChucDanhKhoaHoc"] = new SelectList(_context.DmChucDanhKhoaHocs, "IdChucDanhKhoaHoc", "ChucDanhKhoaHoc", tbNguoi.IdChucDanhKhoaHoc);
                 ViewData["IdChuyenMonDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao", tbNguoi.IdChuyenMonDaoTao);
                 ViewData["IdTonGiao"] = new SelectList(_context.DmTonGiaos, "IdTonGiao", "TonGiao", tbNguoi.IdDanToc);
@@ -189,8 +209,6 @@ namespace C500Hemis.Controllers.CB
         }
 
         // POST: Nguoi/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdNguoi,Ho,Ten,IdQuocTich,SoCccd,NgayCapCccd,NoiCapCccd,NgaySinh,IdGioiTinh,IdDanToc,IdTonGiao,NgayVaoDoan,NgayVaoDang,NgayVaoDangChinhThuc,NgayNhapNgu,NgayXuatNgu,IdThuongBinhHang,IdGiaDinhChinhSach,IdChucDanhKhoaHoc,IdTrinhDoDaoTao,IdChuyenMonDaoTao,IdNgoaiNgu,IdKhungNangLucNgoaiNguc,IdTrinhDoLyLuanChinhTri,IdTrinhDoQuanLyNhaNuoc,IdTrinhDoTinHoc")] TbNguoi tbNguoi)
@@ -204,24 +222,29 @@ namespace C500Hemis.Controllers.CB
 
                 if (ModelState.IsValid)
                 {
+                    //Kiểm tra quá trình update
                     try
                     {
                         _context.Update(tbNguoi);
                         await _context.SaveChangesAsync();
                     }
                     catch (DbUpdateConcurrencyException)
-                    {
-                        if (!TbNguoiExists(tbNguoi.IdNguoi))
+                    {//Nếu QUERY thực thi ở Database không thay đổi giá trị nào thì trả về DbUpdateConcurrencyException
+                     //Lỗi xảy ra chủ yếu do table cần thực thi UPDATE ở database đã bị thay đổi sau khi QUERY được gửi đi
+                     //và trước khi QUERY UPDATE được thực hiện
+                     //Khi gửi QUERY bên cạnh điều kiện ID EF sẽ thêm điều kiện Version để so sánh version khi gửi và khi thực thi 
+                        if (!TbNguoiExists(tbNguoi.IdNguoi))//Nếu đã bị xóa thì trả về STATUS 404
                         {
                             return NotFound();
                         }
                         else
                         {
-                            throw;
+                            return BadRequest();
                         }
                     }
                     return RedirectToAction(nameof(Index));
                 }
+
                 ViewData["IdChucDanhKhoaHoc"] = new SelectList(_context.DmChucDanhKhoaHocs, "IdChucDanhKhoaHoc", "ChucDanhKhoaHoc", tbNguoi.IdChucDanhKhoaHoc);
                 ViewData["IdChuyenMonDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao", tbNguoi.IdChuyenMonDaoTao);
                 ViewData["IdTonGiao"] = new SelectList(_context.DmTonGiaos, "IdTonGiao", "TonGiao", tbNguoi.IdDanToc);
@@ -245,6 +268,7 @@ namespace C500Hemis.Controllers.CB
         }
 
         // GET: Nguoi/Delete/5
+        //Xóa một người khỏi database
         public async Task<IActionResult> Delete(int? id)
         {
             try
@@ -284,9 +308,9 @@ namespace C500Hemis.Controllers.CB
         }
 
         // POST: Nguoi/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("Delete")]//ActionName dùng để định dạng tên action
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id) //Xác nhận xóa
         {
             try
             {
@@ -305,6 +329,7 @@ namespace C500Hemis.Controllers.CB
             }
         }
 
+        //Kiểm tra xem có tồn tại id hay không nếu có return true ngược lại return false
         private bool TbNguoiExists(int id)
         {
             return _context.TbNguois.Any(e => e.IdNguoi == id);
