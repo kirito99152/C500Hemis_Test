@@ -256,6 +256,7 @@ namespace C500Hemis.Controllers.CTDT
                 return RedirectToAction(nameof(Index));
             } catch (Exception ex)
             { 
+
                 return BadRequest();
             }
             
