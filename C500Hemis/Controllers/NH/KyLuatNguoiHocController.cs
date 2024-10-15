@@ -23,7 +23,7 @@ namespace C500Hemis.Controllers.NH
         {
             try 
             {
-                var hemisContext = _context.TbKyLuatNguoiHocs.Include(t => t.IdCapQuyetDinhNavigation).Include(t => t.IdHocVienNavigation).Include(t => t.IdLoaiKyLuatNavigation);
+                var hemisContext = _context.TbKyLuatNguoiHocs.Include(t => t.IdCapQuyetDinhNavigation).Include(t => t.IdHocVienNavigation).ThenInclude(human => human.IdNguoiNavigation).Include(t => t.IdLoaiKyLuatNavigation);
                 return View(await hemisContext.ToListAsync());
             }
             catch (Exception ex)
@@ -107,7 +107,7 @@ namespace C500Hemis.Controllers.NH
                     return RedirectToAction(nameof(Index));
                 }
                 ViewData["IdCapQuyetDinh"] = new SelectList(_context.DmCapKhenThuongs, "IdCapKhenThuong", "CapKhenThuong", tbKyLuatNguoiHoc.IdCapQuyetDinh);
-                ViewData["IdHocVien"] = new SelectList(_context.TbHocViens, "IdHocVien", "IdHocVien", tbKyLuatNguoiHoc.IdHocVien);
+                ViewData["IdHocVien"] = new SelectList(_context.TbHocViens.Include(e => e.IdNguoiNavigation), "IdHocVien", "IdNguoiNavigation.name", tbKyLuatNguoiHoc.IdHocVien);
                 ViewData["IdLoaiKyLuat"] = new SelectList(_context.DmLoaiKyLuats, "IdLoaiKyLuat", "LoaiKyLuat", tbKyLuatNguoiHoc.IdLoaiKyLuat);
                 return View(tbKyLuatNguoiHoc);
             }
@@ -138,7 +138,7 @@ namespace C500Hemis.Controllers.NH
                     return NotFound();
                 }
                 ViewData["IdCapQuyetDinh"] = new SelectList(_context.DmCapKhenThuongs, "IdCapKhenThuong", "CapKhenThuong", tbKyLuatNguoiHoc.IdCapQuyetDinh);
-                ViewData["IdHocVien"] = new SelectList(_context.TbHocViens, "IdHocVien", "IdHocVien", tbKyLuatNguoiHoc.IdHocVien);
+                ViewData["IdHocVien"] = new SelectList(_context.TbHocViens.Include(e => e.IdNguoiNavigation), "IdHocVien", "IdNguoiNavigation.name", tbKyLuatNguoiHoc.IdHocVien);
                 ViewData["IdLoaiKyLuat"] = new SelectList(_context.DmLoaiKyLuats, "IdLoaiKyLuat", "LoaiKyLuat", tbKyLuatNguoiHoc.IdLoaiKyLuat);
                 return View(tbKyLuatNguoiHoc);
             }
@@ -184,7 +184,7 @@ namespace C500Hemis.Controllers.NH
                     return RedirectToAction(nameof(Index));
                 }
                 ViewData["IdCapQuyetDinh"] = new SelectList(_context.DmCapKhenThuongs, "IdCapKhenThuong", "CapKhenThuong", tbKyLuatNguoiHoc.IdCapQuyetDinh);
-                ViewData["IdHocVien"] = new SelectList(_context.TbHocViens, "IdHocVien", "IdHocVien", tbKyLuatNguoiHoc.IdHocVien);
+                ViewData["IdHocVien"] = new SelectList(_context.TbHocViens.Include(e => e.IdNguoiNavigation), "IdHocVien", "IdNguoiNavigation.name", tbKyLuatNguoiHoc.IdHocVien);
                 ViewData["IdLoaiKyLuat"] = new SelectList(_context.DmLoaiKyLuats, "IdLoaiKyLuat", "LoaiKyLuat", tbKyLuatNguoiHoc.IdLoaiKyLuat);
                 return View(tbKyLuatNguoiHoc);
             }
@@ -207,6 +207,7 @@ namespace C500Hemis.Controllers.NH
                 var tbKyLuatNguoiHoc = await _context.TbKyLuatNguoiHocs
                     .Include(t => t.IdCapQuyetDinhNavigation)
                     .Include(t => t.IdHocVienNavigation)
+                    .ThenInclude(human => human.IdNguoiNavigation)
                     .Include(t => t.IdLoaiKyLuatNavigation)
                     .FirstOrDefaultAsync(m => m.IdKyLuatNguoiHoc == id);
                 if (tbKyLuatNguoiHoc == null)
