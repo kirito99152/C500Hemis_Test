@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using C500Hemis.Models.DM;
 
 namespace C500Hemis.Models;
@@ -36,6 +37,7 @@ public partial class TbDuLieuTrungTuyen
 
     public double? DiemUuTien { get; set; }
 
+    [Column(TypeName = "float")]
     public double? TongDiemXetTuyen { get; set; }
 
     public string? SoQuyetDinhTrungTuyen { get; set; }
