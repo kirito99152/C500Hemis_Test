@@ -3,7 +3,13 @@
 @{
     ViewData["Title"] = "Create";
 }
+@section Heads {
+    <!-- Thêm thư viện Select2 dùng để nhập dữ liệu trong hộp tìm kiếm ở IdNganhDaoTao -->
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    
+}
 <h1>Create</h1>
 
 <h4>TbChuongTrinhDaoTao</h4>
@@ -137,4 +143,34 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        // Áp dụng Select2 cho các trường thông tin tìm kiếm số lượng lớn
+        $(document).ready(function () {
+            
+            $("#IdNganhDaoTao").select2({
+                placeholder: "Tìm kiếm ngành đào tạo...",
+                allowClear: true
+            });
+
+            $("#IdLoaiChuongTrinhDaoTao").select2({
+                placeholder: "Tìm kiếm loại chương trình...",
+                allowClear: true
+            });
+
+            $('#IdQuocGiaCuaTruSoChinh').select2({
+                placeholder: "Tìm kiếm quốc gia...",
+                allowClear: true
+            });
+
+            $('#IdTrinhDoDaoTao').select2({
+                placeholder: "Tìm kiếm trình độ đào tạo...",
+                allowClear: true
+            });
+         
+        });
+         
+
+    </script>
+    
 }
