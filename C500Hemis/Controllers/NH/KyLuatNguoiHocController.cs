@@ -144,7 +144,6 @@ namespace C500Hemis.Controllers.NH
             }
             catch (Exception ex)
             {
-//Console.WriteLine(ex.Message);
                 return BadRequest();
             }
         }
