@@ -190,9 +190,9 @@
                 @Html.DisplayFor(modelItem => item.IdTrinhDoTinHocNavigation.TrinhDoTinHoc)
             </td>
             <td>
-                <button class="btn btn-primary"><a asp-action="Edit" asp-route-id="@item.IdNguoi">Edit</a> </button>
-                <button class="btn btn-primary"><a asp-action="Details" asp-route-id="@item.IdNguoi">Details</a></button>
-                <button class="btn btn-danger"><a asp-action="Delete" asp-route-id="@item.IdNguoi">Delete</a></button>
+                    <button class="btn btn-primary" onclick="window.location.href = '@Url.Action("Edit", new {id = item.IdNguoi})'">Sửa</button>
+                    <button class="btn btn-primary" onclick="window.location.href = '@Url.Action("Details", new {id = item.IdNguoi})'">Chi tiết</button>
+                    <button class="btn btn-danger" onclick="window.location.href = '@Url.Action("Delete")'">Xóa</button>
             </td>
         </tr>
 }

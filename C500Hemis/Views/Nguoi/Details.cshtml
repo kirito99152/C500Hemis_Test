@@ -189,8 +189,8 @@
                 </dd>
             </dl>
             <div class="d-flex justify-content-center">
-                <div><button class="btn btn-primary"><a asp-action="Index">Quay lại</a></button></div>
-                <div><button class="btn btn-primary ms-3"><a asp-action="Edit" asp-route-id="@Model.IdNguoi">Thay đổi</a></button></div>
+                <div><button class="btn btn-primary" onclick="window.location.href = '@Url.Action("Index")'">Quay lại</button></div>
+                <div><button class="btn btn-primary ms-3" onclick="window.location.href = '@Url.Action("Edit", new {id = Model.IdNguoi})'">Thay đổi</button></div>
             </div>
         </div>
     </div>
