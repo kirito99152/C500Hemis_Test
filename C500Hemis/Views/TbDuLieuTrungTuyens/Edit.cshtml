@@ -65,27 +65,27 @@
             </div>
             <div class="form-group">
                 <label asp-for="DiemMon1" class="control-label"></label>
-                <input asp-for="DiemMon1" class="form-control" />
+                <input asp-for="DiemMon1" class="form-control" id="DiemMon1" oninput="calculateTotal()" step="0.1"/>
                 <span asp-validation-for="DiemMon1" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DiemMon2" class="control-label"></label>
-                <input asp-for="DiemMon2" class="form-control" />
+                <input asp-for="DiemMon2" class="form-control" id="DiemMon2" oninput="calculateTotal()" step="0.1" />
                 <span asp-validation-for="DiemMon2" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DiemMon3" class="control-label"></label>
-                <input asp-for="DiemMon3" class="form-control" />
+                <input asp-for="DiemMon3" class="form-control" id="DiemMon3" oninput="calculateTotal()" step="0.1" />
                 <span asp-validation-for="DiemMon3" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DiemUuTien" class="control-label"></label>
-                <input asp-for="DiemUuTien" class="form-control" />
+                <input asp-for="DiemUuTien" class="form-control" id="DiemUuTien" oninput="calculateTotal()" step="0.1" />
                 <span asp-validation-for="DiemUuTien" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TongDiemXetTuyen" class="control-label"></label>
-                <input asp-for="TongDiemXetTuyen" class="form-control" />
+                <input asp-for="TongDiemXetTuyen" class="form-control" id="TongDiemXetTuyen" readonly />
                 <span asp-validation-for="TongDiemXetTuyen" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -131,4 +131,20 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        function calculateTotal() {
+            // Lấy giá trị của các điểm nhập vào
+            var diemMon1 = parseFloat(document.getElementById("DiemMon1").value) || 0;
+            var diemMon2 = parseFloat(document.getElementById("DiemMon2").value) || 0;
+            var diemMon3 = parseFloat(document.getElementById("DiemMon3").value) || 0;
+            var diemUuTien = parseFloat(document.getElementById("DiemUuTien").value) || 0;
+
+            // Tính tổng điểm
+            var tongDiem = diemMon1 + diemMon2 + diemMon3 + diemUuTien;
+
+            // Cập nhật giá trị cho ô Tổng Điểm
+            document.getElementById("TongDiemXetTuyen").value = tongDiem.toFixed(2);
+        }
+    </script>
 }
