@@ -109,7 +109,7 @@ public partial class TbThongTinHocTapNghienCuuSinh
     [Display(Name = "Tên học viên")]
     public virtual TbHocVien? IdHocVienNavigation { get; set; }
 
-    [Display(Name = "Loại Hình đào tạo")]
+    [Display(Name = "Loại hình đào tạo")]
     public virtual DmLoaiHinhDaoTao? IdLoaiHinhDaoTaoNavigation { get; set; }
 
     [Display(Name = "Loại tốt nghiệp")]
@@ -124,6 +124,6 @@ public partial class TbThongTinHocTapNghienCuuSinh
     [Display(Name = "Sinh viên năm")]
     public virtual DmSinhVienNam? IdSinhVienNamNavigation { get; set; }
 
-    [Display(Name = "Trạng thái học viên")]
+    [Display(Name = "Trạng thái")]
     public virtual DmTrangThaiHoc? IdTrangThaiHocNavigation { get; set; }
 }

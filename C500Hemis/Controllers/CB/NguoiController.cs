@@ -27,7 +27,6 @@ namespace C500Hemis.Controllers.CB
             //Bắt lổi
             try
             {
-                
                 List<TbNguoi> content = await
                     _context.TbNguois
                     .Include(t => t.IdChucDanhKhoaHocNavigation)
@@ -45,6 +44,7 @@ namespace C500Hemis.Controllers.CB
                     .Include(t => t.IdTrinhDoQuanLyNhaNuocNavigation)
                     .Include(t => t.IdTrinhDoTinHocNavigation)
                     .ToListAsync();
+                Console.WriteLine(content.Count());
                 return View(content);
             } catch(Exception ex)
             {
