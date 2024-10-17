@@ -192,7 +192,7 @@
             <td>
                     <button class="btn btn-primary" onclick="window.location.href = '@Url.Action("Edit", new {id = item.IdNguoi})'">Sửa</button>
                     <button class="btn btn-primary" onclick="window.location.href = '@Url.Action("Details", new {id = item.IdNguoi})'">Chi tiết</button>
-                    <button class="btn btn-danger" onclick="window.location.href = '@Url.Action("Delete")'">Xóa</button>
+                    <button class="btn btn-danger" onclick="window.location.href = '@Url.Action("Delete", new {id = item.IdNguoi})'">Xóa</button>
             </td>
         </tr>
 }
