@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using C500Hemis.Models.DM;
@@ -8,19 +7,20 @@ namespace C500Hemis.Models;
 
 public partial class TbDuLieuTrungTuyen
 {
-       public int IdDuLieuTrungTuyen { get; set; }
+    
+    public int IdDuLieuTrungTuyen { get; set; }
 
-    [Display(Name = "Số CCCD")]
+    [DisplayName("Số CCCD")]
     [StringLength(12, MinimumLength = 12, ErrorMessage = "CCCD phải có đúng 12 ký tự.")]
     public string? Cccd { get; set; }
 
-    [Display(Name = "Họ và tên")]
+    [DisplayName("Họ và Tên")]
     public string? HoVaTen { get; set; }
 
-    [Display(Name = "Mã tuyển sinh")]
+    [DisplayName("Mã Tuyển Sinh")]
     public string? MaTuyenSinh { get; set; }
 
-    [Display(Name = "Khoa đào tạo trúng tuyển")]
+    [DisplayName("Khoa Đào Tạo Trúng Tuyển")]
     public string? KhoaDaoTaoTrungTuyen { get; set; }
 
     public int? IdDoiTuongDauVao { get; set; }
@@ -28,59 +28,59 @@ public partial class TbDuLieuTrungTuyen
     public int? IdHinhThucTuyenSinh { get; set; }
     public int? IdKhuVuc { get; set; }
 
-    [Display(Name = "Trường THPT")]
+    [DisplayName("Trường THPT")]
     public string? TruongThpt { get; set; }
 
-    [Display(Name = "Tổ hợp môn trúng tuyển")]
+    [DisplayName("Tổ Hợp Môn Trúng Tuyển")]
     public string? ToHopMonTrungTuyen { get; set; }
 
-    [Display(Name = "Điểm môn 1")]
+    [DisplayName("Điểm môn 1")]
     [Range(0, 10, ErrorMessage = "Điểm từ 0 đến 10.")]
     public double? DiemMon1 { get; set; }
 
-    [Display(Name = "Điểm môn 2")]
+    [DisplayName("Điểm môn 2")]
     [Range(0, 10, ErrorMessage = "Điểm từ 0 đến 10.")]
     public double? DiemMon2 { get; set; }
 
-    [Display(Name = "Điểm môn 3")]
+    [DisplayName("Điểm môn 3")]
     [Range(0, 10, ErrorMessage = "Điểm từ 0 đến 10.")]
     public double? DiemMon3 { get; set; }
 
-    [Display(Name = "Điểm ưu tiên")]
+    [DisplayName("Điểm ƯT")]
     [Range(0, 10, ErrorMessage = "Điểm từ 0 đến 10.")]
     public double? DiemUuTien { get; set; }
 
-    [Display(Name = "Tổng điểm xét tuyển")]
+    [DisplayName("Tổng Điểm Xét Tuyển")]
     [Column(TypeName = "float")]
     public double? TongDiemXetTuyen { get; set; }
 
-    [Display(Name = "Số quyết định trúng tuyển")]
+    [DisplayName("Số QĐ Trúng Tuyển")]
     public string? SoQuyetDinhTrungTuyen { get; set; }
 
-    [Display(Name = "Ngày ban hành quyết định trúng tuyển")]
+    [DisplayName("Ngày Ban Hành QĐ Trúng Tuyển")]
     public DateTime? NgayBanHanhQuyetDinhTrungTuyen { get; set; }
 
-    [Display(Name = "CT đào tạo đã tốt nghiệp trình độ ĐH")]
+    [DisplayName("CT Đào Tạo Đã Tốt Nghiệp Trình Độ ĐH")]
     public string? ChuongTrinhDaoTaoDaTotNghiepTrinhDoDaiHoc { get; set; }
 
-    [Display(Name = "Ngành đã tốt nghiệp trình độ đại học")]
+    [DisplayName("Ngành Đã Tốt Nghiệp Trình Độ ĐH")]
     public string? NganhDaTotNghiepTrinhDoDaiHoc { get; set; }
 
-    [Display(Name = "CT đào tạo đã tốt nghiệp trình độ TS")]
+    [DisplayName("CT Đào Tạo đã Tốt Nghiệp Trình Độ TS")]
     public string? ChuongTrinhDaoTaoDaTotNghiepTrinhDoThacSi { get; set; }
 
-    [Display(Name = "Ngành đã tốt nghiệp trình độ TS")]
+    [DisplayName("Ngành Đã Tốt Nghiệp Trình Độ TS")]
     public string? NganhDaTotNghiepTrinhDoThacSi { get; set; }
 
-    [Display(Name = "Đối tượng đầu vào")]
+    [DisplayName("Đối Tượng Đầu Vào")]
     public virtual DmDoiTuongDauVao? IdDoiTuongDauVaoNavigation { get; set; }
 
-    [Display(Name = "Đối tượng ưu tiên")]
+    [DisplayName("Đối Tượng ƯT")]
     public virtual DmDoiTuongUuTien? IdDoiTuongUuTienNavigation { get; set; }
 
-    [Display(Name = "Hình thức tuyển sinh")]
+    [DisplayName("Hình Thức Tuyển Sinh")]
     public virtual DmHinhThucTuyenSinh? IdHinhThucTuyenSinhNavigation { get; set; }
 
-    [Display(Name = "Khu vực")]
+    [DisplayName("Khu Vực")]
     public virtual DmKhuVuc? IdKhuVucNavigation { get; set; }
 }

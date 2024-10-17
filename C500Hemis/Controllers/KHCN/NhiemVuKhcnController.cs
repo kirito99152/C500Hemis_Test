@@ -68,6 +68,11 @@ namespace C500Hemis.Controllers.KHCN
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdNhiemVuKhcn,MaNhiemVu,TenNhiemVu,IdCapQuanLyNhiemVu,IdCoQuanChuQuan,CoQuanChuTri,NguoiChuTri,IdPhanLoaiNhiemVu,ThuocNhiemVu,IdLinhVucNghienCuu,TongKinhPhiCuaNhiemVu,IdNguonKinhPhi,ThoiGianBatDau,ThoiGianKetThuc,DanhGiaKetQuaNhiemVu,SanPhamChinhCuaNhiemVu,IdTinhTrangNhiemVu")] TbNhiemVuKhcn tbNhiemVuKhcn)
         {
+            //EDIT
+            if (tbNhiemVuKhcn.TenNhiemVu == null) ModelState.AddModelError("TenNhiemVu", "Bắt buộc nhập!");
+            if (tbNhiemVuKhcn.TenNhiemVu == null) ModelState.AddModelError("IdPhanCapNhiemVu", "Bắt buộc nhập!");
+            if (tbNhiemVuKhcn.TenNhiemVu == null) ModelState.AddModelError("IdLinhVucNghienCuu", "Bắt buộc nhập!");
+
             if (ModelState.IsValid)
             {
                 _context.Add(tbNhiemVuKhcn);
