@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using C500Hemis.Models.DM;
 
@@ -7,7 +7,8 @@ namespace C500Hemis.Models;
 
 public partial class TbDuLieuTrungTuyen
 {
-       public int IdDuLieuTrungTuyen { get; set; }
+    
+    public int IdDuLieuTrungTuyen { get; set; }
 
     [DisplayName("Số CCCD")]
     [StringLength(12, MinimumLength = 12, ErrorMessage = "CCCD phải có đúng 12 ký tự.")]
