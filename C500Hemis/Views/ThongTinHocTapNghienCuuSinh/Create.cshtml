@@ -4,11 +4,12 @@
     ViewData["Title"] = "Create";
 }
 <style>
-    h1, h4  {
+    h1, h4 {
         text-align: center;
     }
+
     div {
-        margin:auto;
+        margin: auto;
     }
 </style>
 
@@ -27,23 +28,23 @@
             </div>
             <div class="form-group">
                 <label asp-for="IdHocVien" class="control-label"></label>
-                <select asp-for="IdHocVien" class ="form-control" asp-items="ViewBag.IdHocVien"></select>
+                <select asp-for="IdHocVien" class="form-control" asp-items="ViewBag.IdHocVien"></select>
             </div>
             <div class="form-group">
                 <label asp-for="IdDoiTuongDauVao" class="control-label"></label>
-                <select asp-for="IdDoiTuongDauVao" class ="form-control" asp-items="ViewBag.IdDoiTuongDauVao"></select>
+                <select asp-for="IdDoiTuongDauVao" class="form-control" asp-items="ViewBag.IdDoiTuongDauVao"></select>
             </div>
             <div class="form-group">
                 <label asp-for="IdSinhVienNam" class="control-label"></label>
-                <select asp-for="IdSinhVienNam" class ="form-control" asp-items="ViewBag.IdSinhVienNam"></select>
+                <select asp-for="IdSinhVienNam" class="form-control" asp-items="ViewBag.IdSinhVienNam"></select>
             </div>
             <div class="form-group">
                 <label asp-for="IdChuongTrinhDaoTao" class="control-label"></label>
-                <select asp-for="IdChuongTrinhDaoTao" class ="form-control" asp-items="ViewBag.IdChuongTrinhDaoTao"></select>
+                <select asp-for="IdChuongTrinhDaoTao" class="form-control" asp-items="ViewBag.IdChuongTrinhDaoTao"></select>
             </div>
             <div class="form-group">
                 <label asp-for="IdLoaiHinhDaoTao" class="control-label"></label>
-                <select asp-for="IdLoaiHinhDaoTao" class ="form-control" asp-items="ViewBag.IdLoaiHinhDaoTao"></select>
+                <select asp-for="IdLoaiHinhDaoTao" class="form-control" asp-items="ViewBag.IdLoaiHinhDaoTao"></select>
             </div>
             <div class="form-group">
                 <label asp-for="DaoTaoTuNam" class="control-label"></label>
@@ -62,7 +63,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="IdTrangThaiHoc" class="control-label"></label>
-                <select asp-for="IdTrangThaiHoc" class ="form-control" asp-items="ViewBag.IdTrangThaiHoc"></select>
+                <select asp-for="IdTrangThaiHoc" class="form-control" asp-items="ViewBag.IdTrangThaiHoc"></select>
             </div>
             <div class="form-group">
                 <label asp-for="NgayChuyenTrangThai" class="control-label"></label>
@@ -96,11 +97,11 @@
             </div>
             <div class="form-group">
                 <label asp-for="IdNguoiHuongDanChinh" class="control-label"></label>
-                <select asp-for="IdNguoiHuongDanChinh" class ="form-control" asp-items="ViewBag.IdNguoiHuongDanChinh"></select>
+                <select asp-for="IdNguoiHuongDanChinh" class="form-control" asp-items="ViewBag.IdNguoiHuongDanChinh"></select>
             </div>
             <div class="form-group">
                 <label asp-for="IdNguoiHuongDanPhu" class="control-label"></label>
-                <select asp-for="IdNguoiHuongDanPhu" class ="form-control" asp-items="ViewBag.IdNguoiHuongDanPhu"></select>
+                <select asp-for="IdNguoiHuongDanPhu" class="form-control" asp-items="ViewBag.IdNguoiHuongDanPhu"></select>
             </div>
             <div class="form-group">
                 <label asp-for="SoQuyetDinhCongNhan" class="control-label"></label>
@@ -114,7 +115,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="IdLoaiTotNghiep" class="control-label"></label>
-                <select asp-for="IdLoaiTotNghiep" class ="form-control" asp-items="ViewBag.IdLoaiTotNghiep"></select>
+                <select asp-for="IdLoaiTotNghiep" class="form-control" asp-items="ViewBag.IdLoaiTotNghiep"></select>
             </div>
             <div class="form-group">
                 <label asp-for="SoQuyetDinhThanhLapHoiDongBaoVeCapCoSo" class="control-label"></label>
@@ -153,8 +154,52 @@
         </form>
     </div>
 </div>
+@*datalist để tìm kiếm trong seclectlist*@
+<script>
+    var select = document.querySelectorAll("select");
+    var data = {};
+    for (var i = 0; i < select.length; ++i) {
+        select[i].hidden = true;
+        let cr = {};
+        let idlist = "datalist" + i.toString();
+        let input = document.createElement("input");
+        let datalist = document.createElement("datalist");
+        let options = select[i].options;
+        let validate = document.createElement("span");
+        input.placeholder = "Nhập để tìm kiếm...";
+        input.className = "form-control";
+        input.setAttribute("list", idlist);
+        input.setAttribute("selid", select[i].id);
+        input.value = select[i].options[select[i].selectedIndex].text;
+        input.addEventListener("change", function (e) {
+            let selid = e.target.getAttribute("selid");
+            let validate = document.getElementById("Validate_" + selid);
+            if (typeof data[selid][e.target.value] !== 'undefined') {
+                document.getElementById(selid).selectedIndex = data[selid][e.target.value];
+                validate.innerHTML = "";
+            } else {
+                validate.innerHTML = validate.getAttribute("msg");
+            }
+        });
+        for (var j = 0; j < options.length; ++j) {
+            cr[options[j].text] = j;
+            let option = document.createElement("option");
+            option.value = options[j].text;
+            datalist.appendChild(option);
+        }
+        datalist.id = idlist;
+        data[select[i].id] = cr;
+        validate.className = "text-danger";
+        validate.id = "Validate_" + select[i].id;
+        validate.setAttribute("msg", "Không hợp lệ");
+        select[i].after(input, datalist, validate);
+    }
+</script>
 
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 }
