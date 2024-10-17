@@ -14,20 +14,16 @@
         .form-group{
             width: 48%;
         }
-        .form-container {
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
-            gap: 20px;
-        }
-        .form-container h2 {
+        h2 {
             text-align: center;
         }
     </style>
 }
 
-<div class="row justify-content-center bg-light p-lg-5">
+<div class="row justify-content-center p-lg-5">
     <div class="col-lg-9">
-        <form asp-action="Edit">
-            <div class="d-flex p-4 flex-wrap justify-content-center form-container">
+        <form asp-action="Edit" id="form">
+            <div class="d-flex p-4 flex-wrap justify-content-center shadow-lg gap-2 rounded">
                 <div class="container">
                     <h2>Chỉnh sửa thông tin</h2>
                 </div>
@@ -145,7 +141,7 @@
                     <select asp-for="IdTrinhDoTinHoc" class="form-control" asp-items="ViewBag.IdTrinhDoTinHoc"></select>
                 </div>
                 <div class="form-group d-flex justify-content-center" style="width: 90%">
-                    <button class="btn btn-primary"><a asp-action="Index">Quay lại</a></button>
+                    <button class="btn btn-primary" onclick="window.location.href = '@Url.Action("Index")'">Quay lại</button>
                     <input type="submit" value="Xác nhận" class="btn btn-primary ms-3" />
                 </div>
             </div>
@@ -155,7 +151,21 @@
 
 @*Tạo tìm kiếm cho select list dùng datalist*@
 <script>
-    var select = document.querySelectorAll("select");
+    function alert(msg) {
+        let div = document.createElement("div");
+        div.style = "position: fixed; right: 0; bottom: 0;";
+        div.className = "alert alert-warning alert-dismissible fade show";
+        div.setAttribute("role", "alert");
+        let btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "btn-close";
+        btn.setAttribute("data-bs-dismiss", "alert");
+        btn.setAttribute("aria-label", "Close");
+        div.append(msg);
+        div.appendChild(btn);
+        return div;
+    }
+    var select = document.querySelectorAll("#form select");
     var data = {};
     for (var i = 0; i < select.length; ++i) {
         select[i].hidden = true;
@@ -176,8 +186,13 @@
             if (typeof data[selid][e.target.value] !== 'undefined') {
                 document.getElementById(selid).selectedIndex = data[selid][e.target.value];
                 validate.innerHTML = "";
+                document.getElementById("form").onsubmit = function (e) { return true; }
             } else {
                 validate.innerHTML = validate.getAttribute("msg");
+                document.getElementById("form").onsubmit = function (e) {
+                    e.preventDefault();
+                    document.body.appendChild(alert("Vui lòng chọn đúng giá trị ở các phần danh sách lựa chọn"));
+                }
             }
         });
         for (var j = 0; j < options.length; ++j) {
