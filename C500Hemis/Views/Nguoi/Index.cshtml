@@ -121,22 +121,22 @@
                 @Html.DisplayFor(modelItem => item.name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdGioiTinhNavigation.GioiTinh)
+                @Html.DisplayFor(modelItem => item.IdGioiTinhNavigation!.GioiTinh)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NgaySinh)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdQuocTichNavigation.TenNuoc)
+                @Html.DisplayFor(modelItem => item.IdQuocTichNavigation!.TenNuoc)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdDanTocNavigation.DanToc)
+                @Html.DisplayFor(modelItem => item.IdDanTocNavigation!.DanToc)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdTonGiaoNavigation.TonGiao)
+                @Html.DisplayFor(modelItem => item.IdTonGiaoNavigation!.TonGiao)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdChucDanhKhoaHocNavigation.ChucDanhKhoaHoc)
+                @Html.DisplayFor(modelItem => item.IdChucDanhKhoaHocNavigation!.ChucDanhKhoaHoc)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.SoCccd)
@@ -163,31 +163,31 @@
                 @Html.DisplayFor(modelItem => item.NgayXuatNgu)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdChuyenMonDaoTaoNavigation.NganhDaoTao)
+                @Html.DisplayFor(modelItem => item.IdChuyenMonDaoTaoNavigation!.NganhDaoTao)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdGiaDinhChinhSachNavigation.HoGiaDinhChinhSach)
+                @Html.DisplayFor(modelItem => item.IdGiaDinhChinhSachNavigation!.HoGiaDinhChinhSach)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdKhungNangLucNgoaiNgucNavigation.TenKhungNangLucNgoaiNgu)
+                @Html.DisplayFor(modelItem => item.IdKhungNangLucNgoaiNgucNavigation!.TenKhungNangLucNgoaiNgu)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdNgoaiNguNavigation.NgoaiNgu)
+                @Html.DisplayFor(modelItem => item.IdNgoaiNguNavigation!.NgoaiNgu)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdThuongBinhHangNavigation.HangThuongBinh)
+                @Html.DisplayFor(modelItem => item.IdThuongBinhHangNavigation!.HangThuongBinh)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdTrinhDoDaoTaoNavigation.TrinhDoDaoTao)
+                @Html.DisplayFor(modelItem => item.IdTrinhDoDaoTaoNavigation!.TrinhDoDaoTao)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdTrinhDoLyLuanChinhTriNavigation.TenTrinhDoLyLuanChinhTri)
+                @Html.DisplayFor(modelItem => item.IdTrinhDoLyLuanChinhTriNavigation!.TenTrinhDoLyLuanChinhTri)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdTrinhDoQuanLyNhaNuocNavigation.TrinhDoQuanLyNhaNuoc)
+                @Html.DisplayFor(modelItem => item.IdTrinhDoQuanLyNhaNuocNavigation!.TrinhDoQuanLyNhaNuoc)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdTrinhDoTinHocNavigation.TrinhDoTinHoc)
+                @Html.DisplayFor(modelItem => item.IdTrinhDoTinHocNavigation!.TrinhDoTinHoc)
             </td>
             <td>
                     <button class="btn btn-primary" onclick="window.location.href = '@Url.Action("Edit", new {id = item.IdNguoi})'">Sửa</button>
