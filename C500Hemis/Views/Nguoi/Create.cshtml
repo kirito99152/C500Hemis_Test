@@ -5,7 +5,6 @@
 }
 
 @section Heads{
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         a, a:visited, a:hover, a:active {
             color: inherit;
@@ -162,10 +161,11 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="https://cdn.jsdelivr.net/gh/kirito99152/search_select@main/search_select.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/kirito99152/search_select@latest/search_select.js"></script>
     @*Tạo tìm kiếm cho select list dùng js library*@
     <script>
         var search = new search_select("form");
+        search.msg = "Không hợp lệ";
         search.run();
     </script>
 }
