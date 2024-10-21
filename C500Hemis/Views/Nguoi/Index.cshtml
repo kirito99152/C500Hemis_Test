@@ -242,6 +242,17 @@
                             action: function (e, dt, node, config) {//Hành động của button
                                 window.location.href = '@Url.Action("Create")';
                             }
+                        },
+                        {
+                            extend: "excel",
+                            className: 'btn btn-primary', //Thêm class cho button
+                            text: 'Xuất excel',
+                            exportOptions: {
+                                columns: function(idx, data, node) {
+                                    if (node.classList.contains("_nonorder")) return false;
+                                    return true;
+                                },
+                            }
                         }
                     ]
                 }
