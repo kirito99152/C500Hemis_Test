@@ -3333,7 +3333,7 @@ public partial class HemisContext : DbContext
             entity.ToTable("tbKyLuatNguoiHoc", "NH");
 
             entity.Property(e => e.IdKyLuatNguoiHoc).ValueGeneratedNever();
-            entity.Property(e => e.LyDo).HasColumnType("text");
+            entity.Property(e => e.LyDo).HasColumnType("ntext");
             entity.Property(e => e.NamBiKyLuat).HasColumnType("text");
             entity.Property(e => e.SoQuyetDinh).HasMaxLength(50);
 

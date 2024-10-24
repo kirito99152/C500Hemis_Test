@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using C500Hemis.Models;
 using C500Hemis.Models.DM;
+using System.Text;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 
 namespace C500Hemis.Controllers.CB
 {
@@ -44,11 +47,26 @@ namespace C500Hemis.Controllers.CB
                     .Include(t => t.IdTrinhDoQuanLyNhaNuocNavigation)
                     .Include(t => t.IdTrinhDoTinHocNavigation)
                     .ToListAsync();
-                Console.WriteLine(content.Count());
                 return View(content);
             } catch(Exception ex)
             {
-                // trả về HTTP Bad request 400
+                // In lỗi vào file
+                //Tạo UTF-8 encoding để encode ký tự về UTF-8
+                UTF8Encoding unicode = new UTF8Encoding();
+                //Tên của file để in lỗi
+                string filename = Path.Combine(Environment.CurrentDirectory, "Error/error.txt"); 
+                //Tạo dãy byte để in vào filestream
+                byte[] bytes = unicode.GetBytes(ex.Message);
+                //Mở file
+                using(FileStream file = new FileStream(filename, FileMode.OpenOrCreate)) {
+                    //Xóa nội dung của file
+                    file.SetLength(0);
+                    //In lỗi vào file
+                    file.Write(bytes, 0, bytes.Length);
+                    //Đóng file
+                    file.Close();
+                }
+                //Trả về HTTP Bad request 400
                 return BadRequest();
             }
         }
@@ -91,6 +109,22 @@ namespace C500Hemis.Controllers.CB
                 return View(tbNguoi);
             } catch (Exception ex)
             {
+                // In lỗi vào file
+                //Tạo UTF-8 encoding để encode ký tự về UTF-8
+                UTF8Encoding unicode = new UTF8Encoding();
+                //Tên của file để in lỗi
+                string filename = Path.Combine(Environment.CurrentDirectory, "Error/error.txt"); 
+                //Tạo dãy byte để in vào filestream
+                byte[] bytes = unicode.GetBytes(ex.Message);
+                //Mở file
+                using(FileStream file = new FileStream(filename, FileMode.OpenOrCreate)) {
+                    //Xóa nội dung của file
+                    file.SetLength(0);
+                    //In lỗi vào file
+                    file.Write(bytes, 0, bytes.Length);
+                    //Đóng file
+                    file.Close();
+                }
                 // trả về HTTP Bad request 400
                 return BadRequest();
             }
@@ -126,6 +160,22 @@ namespace C500Hemis.Controllers.CB
             }
             catch (Exception ex)
             {
+                // In lỗi vào file
+                //Tạo UTF-8 encoding để encode ký tự về UTF-8
+                UTF8Encoding unicode = new UTF8Encoding();
+                //Tên của file để in lỗi
+                string filename = Path.Combine(Environment.CurrentDirectory, "Error/error.txt"); 
+                //Tạo dãy byte để in vào filestream
+                byte[] bytes = unicode.GetBytes(ex.Message);
+                //Mở file
+                using(FileStream file = new FileStream(filename, FileMode.OpenOrCreate)) {
+                    //Xóa nội dung của file
+                    file.SetLength(0);
+                    //In lỗi vào file
+                    file.Write(bytes, 0, bytes.Length);
+                    //Đóng file
+                    file.Close();
+                }
                 // trả về HTTP Bad request 400
                 return BadRequest();
             }
@@ -166,6 +216,22 @@ namespace C500Hemis.Controllers.CB
             }
             catch (Exception ex)
             {
+                // In lỗi vào file
+                //Tạo UTF-8 encoding để encode ký tự về UTF-8
+                UTF8Encoding unicode = new UTF8Encoding();
+                //Tên của file để in lỗi
+                string filename = Path.Combine(Environment.CurrentDirectory, "Error/error.txt"); 
+                //Tạo dãy byte để in vào filestream
+                byte[] bytes = unicode.GetBytes(ex.Message);
+                //Mở file
+                using(FileStream file = new FileStream(filename, FileMode.OpenOrCreate)) {
+                    //Xóa nội dung của file
+                    file.SetLength(0);
+                    //In lỗi vào file
+                    file.Write(bytes, 0, bytes.Length);
+                    //Đóng file
+                    file.Close();
+                }
                 return BadRequest();
             }
         }
@@ -204,6 +270,22 @@ namespace C500Hemis.Controllers.CB
                 return View(tbNguoi);
             } catch(Exception ex)
             {
+                // In lỗi vào file
+                //Tạo UTF-8 encoding để encode ký tự về UTF-8
+                UTF8Encoding unicode = new UTF8Encoding();
+                //Tên của file để in lỗi
+                string filename = Path.Combine(Environment.CurrentDirectory, "Error/error.txt"); 
+                //Tạo dãy byte để in vào filestream
+                byte[] bytes = unicode.GetBytes(ex.Message);
+                //Mở file
+                using(FileStream file = new FileStream(filename, FileMode.OpenOrCreate)) {
+                    //Xóa nội dung của file
+                    file.SetLength(0);
+                    //In lỗi vào file
+                    file.Write(bytes, 0, bytes.Length);
+                    //Đóng file
+                    file.Close();
+                }
                 return BadRequest();
             }
         }
@@ -263,6 +345,22 @@ namespace C500Hemis.Controllers.CB
             }
             catch (Exception ex)
             {
+                // In lỗi vào file
+                //Tạo UTF-8 encoding để encode ký tự về UTF-8
+                UTF8Encoding unicode = new UTF8Encoding();
+                //Tên của file để in lỗi
+                string filename = Path.Combine(Environment.CurrentDirectory, "Error/error.txt"); 
+                //Tạo dãy byte để in vào filestream
+                byte[] bytes = unicode.GetBytes(ex.Message);
+                //Mở file
+                using(FileStream file = new FileStream(filename, FileMode.OpenOrCreate)) {
+                    //Xóa nội dung của file
+                    file.SetLength(0);
+                    //In lỗi vào file
+                    file.Write(bytes, 0, bytes.Length);
+                    //Đóng file
+                    file.Close();
+                }
                 return BadRequest();
             }
         }
@@ -303,6 +401,22 @@ namespace C500Hemis.Controllers.CB
             }
             catch (Exception ex)
             {
+                // In lỗi vào file
+                //Tạo UTF-8 encoding để encode ký tự về UTF-8
+                UTF8Encoding unicode = new UTF8Encoding();
+                //Tên của file để in lỗi
+                string filename = Path.Combine(Environment.CurrentDirectory, "Error/error.txt"); 
+                //Tạo dãy byte để in vào filestream
+                byte[] bytes = unicode.GetBytes(ex.Message);
+                //Mở file
+                using(FileStream file = new FileStream(filename, FileMode.OpenOrCreate)) {
+                    //Xóa nội dung của file
+                    file.SetLength(0);
+                    //In lỗi vào file
+                    file.Write(bytes, 0, bytes.Length);
+                    //Đóng file
+                    file.Close();
+                }
                 return BadRequest();
             }
         }
@@ -325,6 +439,22 @@ namespace C500Hemis.Controllers.CB
             }
             catch (Exception ex)
             {
+                // In lỗi vào file
+                //Tạo UTF-8 encoding để encode ký tự về UTF-8
+                UTF8Encoding unicode = new UTF8Encoding();
+                //Tên của file để in lỗi
+                string filename = Path.Combine(Environment.CurrentDirectory, "Error/error.txt"); 
+                //Tạo dãy byte để in vào filestream
+                byte[] bytes = unicode.GetBytes(ex.Message);
+                //Mở file
+                using(FileStream file = new FileStream(filename, FileMode.OpenOrCreate)) {
+                    //Xóa nội dung của file
+                    file.SetLength(0);
+                    //In lỗi vào file
+                    file.Write(bytes, 0, bytes.Length);
+                    //Đóng file
+                    file.Close();
+                }
                 return BadRequest();
             }
         }
