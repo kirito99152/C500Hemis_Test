@@ -1,10 +1,11 @@
-﻿body {
+﻿/*Định dạng toàn trang web*/
+body {
     font-family: "Merriweather", serif;
     font-weight: 400;
     font-style: normal;
     background: linear-gradient(135deg,#F5E7F6, #E4FCFF);
 }
-
+/*Định dạng thẻ h1*/
 h1 {
     text-align: center;
     font-size: 54px;
@@ -14,6 +15,7 @@ h1 {
     font-style: normal;
     margin-bottom: 50px;
 }
+/*Định dạng thẻ h2*/
 h2 {
     text-align: center;
     font-size: 30px;
@@ -23,6 +25,7 @@ h2 {
     font-style: normal;
     margin-top:20px;
 }
+/*Định dạng thẻ p để nó ở center*/
 p{
     margin: 0;
 }
@@ -30,6 +33,7 @@ p{
     width: 90%;
     margin: auto;
 }
+/*Định dạng bảng không cố định*/
 table.dataTable {
     white-space: nowrap;
     border: 1px #CACCCD solid;
@@ -84,20 +88,7 @@ tr:nth-child(even) .dtfc-fixed-right {
     width: auto !important; /* Đảm bảo bảng co giãn */
 }
 
-p a {
-    background-color: #28a745;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-}
-
-    p a:hover {
-        background-color: #218838;
-    }
-
-
+/*Định dạng nút tạo mới*/
 .btn-primary {
     border-radius: 5px;
     font-size: 18px;
@@ -113,6 +104,7 @@ p a {
     .btn-primary:hover {
         background-color: #ACCFFF;
     }
+/*định dạng nút xóa*/
 .btn-danger {
     border-radius: 5px;
     font-size: 18px;
@@ -127,6 +119,7 @@ p a {
 .btn {
         padding: 0px 7px;
     }
+/*định dạng icon*/
 .icon-container {
     font-size: 20px; /* Kích thước biểu tượng */
     transition: transform 0.3s, color 0.3s; /* Hiệu ứng chuyển tiếp */
@@ -137,6 +130,7 @@ p a {
         transform: scale(1.2); /* Phóng to biểu tượng khi hover */
         color: #ff5722; /* Thay đổi màu sắc khi hover */
     }
+/*Định dạng nút tạo mới khi tạo mới*/
 .btn-create {
     background-color: #2E87FF;
     border-radius: 20px;
@@ -155,7 +149,7 @@ p a {
         font-weight: bolder; /* Chữ sẽ đậm hơn khi nhấn */
         background-color: #ACCFFF; /*màu xanh nhạt khi hover*/
     }
-
+/*Định dạng loại tốt nghiệp*/
 .badge-xuatsac {
     background-color: #FFED8F;
 }

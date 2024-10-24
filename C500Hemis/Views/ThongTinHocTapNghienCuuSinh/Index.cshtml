@@ -14,9 +14,7 @@
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/fixedcolumns/4.2.2/js/dataTables.fixedColumns.min.js"></script>
     <link href="~/css/ThongTinHocTapNghienCuuSinh.css" rel="stylesheet" /> 
-
 }
-
 
 <h1>THÔNG TIN HỌC TẬP NGHIÊN CỨU SINH</h1>
 <div class="w">
@@ -237,22 +235,22 @@
                 </td>
 
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.IdThongTinHocTapNghienCuuSinh" class="btn">
-                        <div class="icon-container">
-                            <i class="fa-regular fa-pen-to-square" style="color: #7dd9bd;"></i>
-                        </div>
-                        
-                    </a>
-                    <a asp-action="Details" asp-route-id="@item.IdThongTinHocTapNghienCuuSinh" class="btn">
-                        <div class="icon-container">
-                            <i class="fa-solid fa-circle-info" style="color: #e5b8e4;"></i>
-                        </div>
-                    </a>
-                    <a asp-action="Delete" asp-route-id="@item.IdThongTinHocTapNghienCuuSinh" class="btn">
-                        <div class="icon-container">
-                            <i class="fa-solid fa-trash" style="color: #f46262;"></i>
-                        </div>
-                    </a>
+                        <a asp-action="Edit" asp-route-id="@item.IdThongTinHocTapNghienCuuSinh" class="btn" data-bs-toggle="tooltip" title="Chỉnh sửa">
+                            <div class="icon-container">
+                                <i class="fa-regular fa-pen-to-square" style="color: #7dd9bd;"></i>
+                            </div>
+                        </a>
+                        <a asp-action="Details" asp-route-id="@item.IdThongTinHocTapNghienCuuSinh" class="btn" data-bs-toggle="tooltip" title="Chi tiết">
+                            <div class="icon-container">
+                                <i class="fa-solid fa-circle-info" style="color: #e5b8e4;"></i>
+                            </div>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.IdThongTinHocTapNghienCuuSinh" class="btn" data-bs-toggle="tooltip" title="Xóa">
+                            <div class="icon-container">
+                                <i class="fa-solid fa-trash" style="color: #f46262;"></i>
+                            </div>
+                        </a>
+
                 </td>
             </tr>
                 
@@ -262,25 +260,31 @@
 </div>
 @section Scripts {
     <script>
+        // Initialize DataTable
         new DataTable('#example', {
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Vietnamese.json" // thiết lập tiếng việt cho datatables
+            },
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+            "scrollX": true,
+            "fixedColumns": {
+                leftColumns: 1,  // Giữ 1 cột đầu tiên
+                rightColumns: 1  // Giữ cột cuối cùng
+            }
+        });
 
-                "language": {
-                   "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Vietnamese.json" //thiết lập tiếng việt cho datatables
-                },
-                "paging": true,
-                "lengthChange": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-            responsive: true,
-            scrollX: true,
-                fixedColumns: {
-                      leftColumns: 1,  // Giữ 2 cột đầu tiên
-                      rightColumns: 1   // Giữ cột cuối cùng
-                }
+        // Initialize Bootstrap tooltips after DataTable initialization
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
 
-            });
 
         </script>
         }
