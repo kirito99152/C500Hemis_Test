@@ -10,6 +10,7 @@ using C500Hemis.Models;
 using C500Hemis.Models.DM;
 using System.Text;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
+using Microsoft.Data.SqlClient;
 
 namespace C500Hemis.Controllers.CB
 {
@@ -48,25 +49,8 @@ namespace C500Hemis.Controllers.CB
                     .Include(t => t.IdTrinhDoTinHocNavigation)
                     .ToListAsync();
                 return View(content);
-            } catch(Exception ex)
-            {
-                // In lỗi vào file
-                //Tạo UTF-8 encoding để encode ký tự về UTF-8
-                UTF8Encoding unicode = new UTF8Encoding();
-                //Tên của file để in lỗi
-                string filename = Path.Combine(Environment.CurrentDirectory, "Error/error.txt"); 
-                //Tạo dãy byte để in vào filestream
-                byte[] bytes = unicode.GetBytes(ex.Message);
-                //Mở file
-                using(FileStream file = new FileStream(filename, FileMode.OpenOrCreate)) {
-                    //Xóa nội dung của file
-                    file.SetLength(0);
-                    //In lỗi vào file
-                    file.Write(bytes, 0, bytes.Length);
-                    //Đóng file
-                    file.Close();
-                }
-                //Trả về HTTP Bad request 400
+            } catch (Exception ex) {
+                export_message(ex.Message + "\n" + (ex.InnerException == null ? "":ex.InnerException.ToString()));
                 return BadRequest();
             }
         }
@@ -107,25 +91,8 @@ namespace C500Hemis.Controllers.CB
                 }
                 //Nếu tồn tại trả về View Details
                 return View(tbNguoi);
-            } catch (Exception ex)
-            {
-                // In lỗi vào file
-                //Tạo UTF-8 encoding để encode ký tự về UTF-8
-                UTF8Encoding unicode = new UTF8Encoding();
-                //Tên của file để in lỗi
-                string filename = Path.Combine(Environment.CurrentDirectory, "Error/error.txt"); 
-                //Tạo dãy byte để in vào filestream
-                byte[] bytes = unicode.GetBytes(ex.Message);
-                //Mở file
-                using(FileStream file = new FileStream(filename, FileMode.OpenOrCreate)) {
-                    //Xóa nội dung của file
-                    file.SetLength(0);
-                    //In lỗi vào file
-                    file.Write(bytes, 0, bytes.Length);
-                    //Đóng file
-                    file.Close();
-                }
-                // trả về HTTP Bad request 400
+            } catch (Exception ex) {
+                export_message(ex.Message + "\n" + (ex.InnerException == null ? "":ex.InnerException.ToString()));
                 return BadRequest();
             }
         }
@@ -136,47 +103,10 @@ namespace C500Hemis.Controllers.CB
             //Bắt lổi
             try
             {
-                //SelectList phục vụ cho việc nhập dữ liệu cho các ForeignKey
-                //Mô hình selectlist(List<model>, ValueField, TextField)
-                //ValueField, TextField đều là tên attribute của model
-                //ValueField là tên attribute cần client nhập để lấy dữ liệu
-                //TextField là tên attribute muốn hiển thị cho client
-                //Vd model DmChucDanhKhoaHoc thì ValueField là IdChucDanhKhoaHoc tương đương DmChucDanhKhoaHoc.IdChucDanhKhoaHoc
-                ViewData["IdChucDanhKhoaHoc"] = new SelectList(_context.DmChucDanhKhoaHocs, "IdChucDanhKhoaHoc", "ChucDanhKhoaHoc");
-                ViewData["IdChuyenMonDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao");
-                ViewData["IdTonGiao"] = new SelectList(_context.DmTonGiaos, "IdTonGiao", "TonGiao");
-                ViewData["IdDanToc"] = new SelectList(_context.DmDanTocs, "IdDanToc", "DanToc");
-                ViewData["IdGiaDinhChinhSach"] = new SelectList(_context.DmHoGiaDinhChinhSaches, "IdHoGiaDinhChinhSach", "HoGiaDinhChinhSach");
-                ViewData["IdGioiTinh"] = new SelectList(_context.DmGioiTinhs, "IdGioiTinh", "GioiTinh");
-                ViewData["IdKhungNangLucNgoaiNguc"] = new SelectList(_context.DmKhungNangLucNgoaiNgus, "IdKhungNangLucNgoaiNgu", "TenKhungNangLucNgoaiNgu");
-                ViewData["IdNgoaiNgu"] = new SelectList(_context.DmNgoaiNgus, "IdNgoaiNgu", "NgoaiNgu");
-                ViewData["IdQuocTich"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "TenNuoc");
-                ViewData["IdThuongBinhHang"] = new SelectList(_context.DmHangThuongBinhs, "IdHangThuongBinh", "HangThuongBinh");
-                ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "TrinhDoDaoTao");
-                ViewData["IdTrinhDoLyLuanChinhTri"] = new SelectList(_context.DmTrinhDoLyLuanChinhTris, "IdTrinhDoLyLuanChinhTri", "TenTrinhDoLyLuanChinhTri");
-                ViewData["IdTrinhDoQuanLyNhaNuoc"] = new SelectList(_context.DmTrinhDoQuanLyNhaNuocs, "IdTrinhDoQuanLyNhaNuoc", "TrinhDoQuanLyNhaNuoc");
-                ViewData["IdTrinhDoTinHoc"] = new SelectList(_context.DmTrinhDoTinHocs, "IdTrinhDoTinHoc", "TrinhDoTinHoc");
+                make_select_list();
                 return View();
-            }
-            catch (Exception ex)
-            {
-                // In lỗi vào file
-                //Tạo UTF-8 encoding để encode ký tự về UTF-8
-                UTF8Encoding unicode = new UTF8Encoding();
-                //Tên của file để in lỗi
-                string filename = Path.Combine(Environment.CurrentDirectory, "Error/error.txt"); 
-                //Tạo dãy byte để in vào filestream
-                byte[] bytes = unicode.GetBytes(ex.Message);
-                //Mở file
-                using(FileStream file = new FileStream(filename, FileMode.OpenOrCreate)) {
-                    //Xóa nội dung của file
-                    file.SetLength(0);
-                    //In lỗi vào file
-                    file.Write(bytes, 0, bytes.Length);
-                    //Đóng file
-                    file.Close();
-                }
-                // trả về HTTP Bad request 400
+            } catch (Exception ex) {
+                export_message(ex.Message + "\n" + (ex.InnerException == null ? "":ex.InnerException.ToString()));
                 return BadRequest();
             }
         }
@@ -197,41 +127,10 @@ namespace C500Hemis.Controllers.CB
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
-                //Mô hình giải thích ở phía trên chỉ khác biệt ở chổ có thêm phần value của selectlist mà đang được chọn
-                ViewData["IdChucDanhKhoaHoc"] = new SelectList(_context.DmChucDanhKhoaHocs, "IdChucDanhKhoaHoc", "ChucDanhKhoaHoc", tbNguoi.IdChucDanhKhoaHoc);
-                ViewData["IdChuyenMonDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao", tbNguoi.IdChuyenMonDaoTao);
-                ViewData["IdTonGiao"] = new SelectList(_context.DmTonGiaos, "IdTonGiao", "TonGiao", tbNguoi.IdDanToc);
-                ViewData["IdDanToc"] = new SelectList(_context.DmDanTocs, "IdDanToc", "DanToc", tbNguoi.IdDanToc);
-                ViewData["IdGiaDinhChinhSach"] = new SelectList(_context.DmHoGiaDinhChinhSaches, "IdHoGiaDinhChinhSach", "HoGiaDinhChinhSach", tbNguoi.IdGiaDinhChinhSach);
-                ViewData["IdGioiTinh"] = new SelectList(_context.DmGioiTinhs, "IdGioiTinh", "GioiTinh", tbNguoi.IdGioiTinh);
-                ViewData["IdKhungNangLucNgoaiNguc"] = new SelectList(_context.DmKhungNangLucNgoaiNgus, "IdKhungNangLucNgoaiNgu", "TenKhungNangLucNgoaiNgu", tbNguoi.IdKhungNangLucNgoaiNguc);
-                ViewData["IdNgoaiNgu"] = new SelectList(_context.DmNgoaiNgus, "IdNgoaiNgu", "NgoaiNgu", tbNguoi.IdNgoaiNgu);
-                ViewData["IdQuocTich"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "TenNuoc", tbNguoi.IdQuocTich);
-                ViewData["IdThuongBinhHang"] = new SelectList(_context.DmHangThuongBinhs, "IdHangThuongBinh", "HangThuongBinh", tbNguoi.IdThuongBinhHang);
-                ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "TrinhDoDaoTao", tbNguoi.IdTrinhDoDaoTao);
-                ViewData["IdTrinhDoLyLuanChinhTri"] = new SelectList(_context.DmTrinhDoLyLuanChinhTris, "IdTrinhDoLyLuanChinhTri", "TenTrinhDoLyLuanChinhTri", tbNguoi.IdTrinhDoLyLuanChinhTri);
-                ViewData["IdTrinhDoQuanLyNhaNuoc"] = new SelectList(_context.DmTrinhDoQuanLyNhaNuocs, "IdTrinhDoQuanLyNhaNuoc", "TrinhDoQuanLyNhaNuoc", tbNguoi.IdTrinhDoQuanLyNhaNuoc);
-                ViewData["IdTrinhDoTinHoc"] = new SelectList(_context.DmTrinhDoTinHocs, "IdTrinhDoTinHoc", "TrinhDoTinHoc", tbNguoi.IdTrinhDoTinHoc);
+                make_select_list(tbNguoi);
                 return View(tbNguoi);
-            }
-            catch (Exception ex)
-            {
-                // In lỗi vào file
-                //Tạo UTF-8 encoding để encode ký tự về UTF-8
-                UTF8Encoding unicode = new UTF8Encoding();
-                //Tên của file để in lỗi
-                string filename = Path.Combine(Environment.CurrentDirectory, "Error/error.txt"); 
-                //Tạo dãy byte để in vào filestream
-                byte[] bytes = unicode.GetBytes(ex.Message);
-                //Mở file
-                using(FileStream file = new FileStream(filename, FileMode.OpenOrCreate)) {
-                    //Xóa nội dung của file
-                    file.SetLength(0);
-                    //In lỗi vào file
-                    file.Write(bytes, 0, bytes.Length);
-                    //Đóng file
-                    file.Close();
-                }
+            } catch (Exception ex) {
+                export_message(ex.Message + "\n" + (ex.InnerException == null ? "":ex.InnerException.ToString()));
                 return BadRequest();
             }
         }
@@ -252,40 +151,11 @@ namespace C500Hemis.Controllers.CB
                 {
                     return NotFound();
                 }
-                //Nếu tìm thấy khởi tạo các giá trị các giá trị cần thiết và trả về view
-                ViewData["IdChucDanhKhoaHoc"] = new SelectList(_context.DmChucDanhKhoaHocs, "IdChucDanhKhoaHoc", "ChucDanhKhoaHoc", tbNguoi.IdChucDanhKhoaHoc);
-                ViewData["IdChuyenMonDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao", tbNguoi.IdChuyenMonDaoTao);
-                ViewData["IdTonGiao"] = new SelectList(_context.DmTonGiaos, "IdTonGiao", "TonGiao", tbNguoi.IdDanToc);
-                ViewData["IdDanToc"] = new SelectList(_context.DmDanTocs, "IdDanToc", "DanToc", tbNguoi.IdDanToc);
-                ViewData["IdGiaDinhChinhSach"] = new SelectList(_context.DmHoGiaDinhChinhSaches, "IdHoGiaDinhChinhSach", "HoGiaDinhChinhSach", tbNguoi.IdGiaDinhChinhSach);
-                ViewData["IdGioiTinh"] = new SelectList(_context.DmGioiTinhs, "IdGioiTinh", "GioiTinh", tbNguoi.IdGioiTinh);
-                ViewData["IdKhungNangLucNgoaiNguc"] = new SelectList(_context.DmKhungNangLucNgoaiNgus, "IdKhungNangLucNgoaiNgu", "TenKhungNangLucNgoaiNgu", tbNguoi.IdKhungNangLucNgoaiNguc);
-                ViewData["IdNgoaiNgu"] = new SelectList(_context.DmNgoaiNgus, "IdNgoaiNgu", "NgoaiNgu", tbNguoi.IdNgoaiNgu);
-                ViewData["IdQuocTich"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "TenNuoc", tbNguoi.IdQuocTich);
-                ViewData["IdThuongBinhHang"] = new SelectList(_context.DmHangThuongBinhs, "IdHangThuongBinh", "HangThuongBinh", tbNguoi.IdThuongBinhHang);
-                ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "TrinhDoDaoTao", tbNguoi.IdTrinhDoDaoTao);
-                ViewData["IdTrinhDoLyLuanChinhTri"] = new SelectList(_context.DmTrinhDoLyLuanChinhTris, "IdTrinhDoLyLuanChinhTri", "TenTrinhDoLyLuanChinhTri", tbNguoi.IdTrinhDoLyLuanChinhTri);
-                ViewData["IdTrinhDoQuanLyNhaNuoc"] = new SelectList(_context.DmTrinhDoQuanLyNhaNuocs, "IdTrinhDoQuanLyNhaNuoc", "TrinhDoQuanLyNhaNuoc", tbNguoi.IdTrinhDoQuanLyNhaNuoc);
-                ViewData["IdTrinhDoTinHoc"] = new SelectList(_context.DmTrinhDoTinHocs, "IdTrinhDoTinHoc", "TrinhDoTinHoc", tbNguoi.IdTrinhDoTinHoc);
+                //Nếu tìm thấy, khởi tạo các giá trị các giá trị cần thiết và trả về view
+                make_select_list(tbNguoi);
                 return View(tbNguoi);
-            } catch(Exception ex)
-            {
-                // In lỗi vào file
-                //Tạo UTF-8 encoding để encode ký tự về UTF-8
-                UTF8Encoding unicode = new UTF8Encoding();
-                //Tên của file để in lỗi
-                string filename = Path.Combine(Environment.CurrentDirectory, "Error/error.txt"); 
-                //Tạo dãy byte để in vào filestream
-                byte[] bytes = unicode.GetBytes(ex.Message);
-                //Mở file
-                using(FileStream file = new FileStream(filename, FileMode.OpenOrCreate)) {
-                    //Xóa nội dung của file
-                    file.SetLength(0);
-                    //In lỗi vào file
-                    file.Write(bytes, 0, bytes.Length);
-                    //Đóng file
-                    file.Close();
-                }
+            } catch (Exception ex) {
+                export_message(ex.Message + "\n" + (ex.InnerException == null ? "":ex.InnerException.ToString()));
                 return BadRequest();
             }
         }
@@ -326,41 +196,10 @@ namespace C500Hemis.Controllers.CB
                     }
                     return RedirectToAction(nameof(Index));
                 }
-
-                ViewData["IdChucDanhKhoaHoc"] = new SelectList(_context.DmChucDanhKhoaHocs, "IdChucDanhKhoaHoc", "ChucDanhKhoaHoc", tbNguoi.IdChucDanhKhoaHoc);
-                ViewData["IdChuyenMonDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao", tbNguoi.IdChuyenMonDaoTao);
-                ViewData["IdTonGiao"] = new SelectList(_context.DmTonGiaos, "IdTonGiao", "TonGiao", tbNguoi.IdDanToc);
-                ViewData["IdDanToc"] = new SelectList(_context.DmDanTocs, "IdDanToc", "DanToc", tbNguoi.IdDanToc);
-                ViewData["IdGiaDinhChinhSach"] = new SelectList(_context.DmHoGiaDinhChinhSaches, "IdHoGiaDinhChinhSach", "HoGiaDinhChinhSach", tbNguoi.IdGiaDinhChinhSach);
-                ViewData["IdGioiTinh"] = new SelectList(_context.DmGioiTinhs, "IdGioiTinh", "GioiTinh", tbNguoi.IdGioiTinh);
-                ViewData["IdKhungNangLucNgoaiNguc"] = new SelectList(_context.DmKhungNangLucNgoaiNgus, "IdKhungNangLucNgoaiNgu", "TenKhungNangLucNgoaiNgu", tbNguoi.IdKhungNangLucNgoaiNguc);
-                ViewData["IdNgoaiNgu"] = new SelectList(_context.DmNgoaiNgus, "IdNgoaiNgu", "NgoaiNgu", tbNguoi.IdNgoaiNgu);
-                ViewData["IdQuocTich"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "TenNuoc", tbNguoi.IdQuocTich);
-                ViewData["IdThuongBinhHang"] = new SelectList(_context.DmHangThuongBinhs, "IdHangThuongBinh", "HangThuongBinh", tbNguoi.IdThuongBinhHang);
-                ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "TrinhDoDaoTao", tbNguoi.IdTrinhDoDaoTao);
-                ViewData["IdTrinhDoLyLuanChinhTri"] = new SelectList(_context.DmTrinhDoLyLuanChinhTris, "IdTrinhDoLyLuanChinhTri", "TenTrinhDoLyLuanChinhTri", tbNguoi.IdTrinhDoLyLuanChinhTri);
-                ViewData["IdTrinhDoQuanLyNhaNuoc"] = new SelectList(_context.DmTrinhDoQuanLyNhaNuocs, "IdTrinhDoQuanLyNhaNuoc", "TrinhDoQuanLyNhaNuoc", tbNguoi.IdTrinhDoQuanLyNhaNuoc);
-                ViewData["IdTrinhDoTinHoc"] = new SelectList(_context.DmTrinhDoTinHocs, "IdTrinhDoTinHoc", "TrinhDoTinHoc", tbNguoi.IdTrinhDoTinHoc);
+                make_select_list(tbNguoi);
                 return View(tbNguoi);
-            }
-            catch (Exception ex)
-            {
-                // In lỗi vào file
-                //Tạo UTF-8 encoding để encode ký tự về UTF-8
-                UTF8Encoding unicode = new UTF8Encoding();
-                //Tên của file để in lỗi
-                string filename = Path.Combine(Environment.CurrentDirectory, "Error/error.txt"); 
-                //Tạo dãy byte để in vào filestream
-                byte[] bytes = unicode.GetBytes(ex.Message);
-                //Mở file
-                using(FileStream file = new FileStream(filename, FileMode.OpenOrCreate)) {
-                    //Xóa nội dung của file
-                    file.SetLength(0);
-                    //In lỗi vào file
-                    file.Write(bytes, 0, bytes.Length);
-                    //Đóng file
-                    file.Close();
-                }
+            } catch (Exception ex) {
+                export_message(ex.Message + "\n" + (ex.InnerException == null ? "":ex.InnerException.ToString()));
                 return BadRequest();
             }
         }
@@ -398,25 +237,8 @@ namespace C500Hemis.Controllers.CB
                 }
 
                 return View(tbNguoi);
-            }
-            catch (Exception ex)
-            {
-                // In lỗi vào file
-                //Tạo UTF-8 encoding để encode ký tự về UTF-8
-                UTF8Encoding unicode = new UTF8Encoding();
-                //Tên của file để in lỗi
-                string filename = Path.Combine(Environment.CurrentDirectory, "Error/error.txt"); 
-                //Tạo dãy byte để in vào filestream
-                byte[] bytes = unicode.GetBytes(ex.Message);
-                //Mở file
-                using(FileStream file = new FileStream(filename, FileMode.OpenOrCreate)) {
-                    //Xóa nội dung của file
-                    file.SetLength(0);
-                    //In lỗi vào file
-                    file.Write(bytes, 0, bytes.Length);
-                    //Đóng file
-                    file.Close();
-                }
+            } catch (Exception ex) {
+                export_message(ex.Message + "\n" + (ex.InnerException == null ? "":ex.InnerException.ToString()));
                 return BadRequest();
             }
         }
@@ -433,28 +255,10 @@ namespace C500Hemis.Controllers.CB
                 {
                     _context.TbNguois.Remove(tbNguoi);
                 }
-
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                // In lỗi vào file
-                //Tạo UTF-8 encoding để encode ký tự về UTF-8
-                UTF8Encoding unicode = new UTF8Encoding();
-                //Tên của file để in lỗi
-                string filename = Path.Combine(Environment.CurrentDirectory, "Error/error.txt"); 
-                //Tạo dãy byte để in vào filestream
-                byte[] bytes = unicode.GetBytes(ex.Message);
-                //Mở file
-                using(FileStream file = new FileStream(filename, FileMode.OpenOrCreate)) {
-                    //Xóa nội dung của file
-                    file.SetLength(0);
-                    //In lỗi vào file
-                    file.Write(bytes, 0, bytes.Length);
-                    //Đóng file
-                    file.Close();
-                }
+            } catch (Exception ex) {
+                export_message(ex.Message + "\n" + (ex.InnerException == null ? "":ex.InnerException.ToString()));
                 return BadRequest();
             }
         }
@@ -463,6 +267,70 @@ namespace C500Hemis.Controllers.CB
         private bool TbNguoiExists(int id)
         {
             return _context.TbNguois.Any(e => e.IdNguoi == id);
+        }
+
+        //Tạo các select_list
+        private void make_select_list(TbNguoi? tbNguoi = null) {
+            //Nếu là null tức là chỉ cần in ra select_list không cần định nghĩa giá trị đã chọn
+            if (tbNguoi == null) {
+                //SelectList phục vụ cho việc nhập dữ liệu cho các ForeignKey
+                //Mô hình selectlist(List<model>, ValueField, TextField)
+                //ValueField, TextField đều là tên attribute của model
+                //ValueField là tên attribute cần client nhập để lấy dữ liệu
+                //TextField là tên attribute muốn hiển thị cho client
+                //Vd model DmChucDanhKhoaHoc thì ValueField là IdChucDanhKhoaHoc tương đương DmChucDanhKhoaHoc.IdChucDanhKhoaHoc
+                ViewData["IdChucDanhKhoaHoc"] = new SelectList(_context.DmChucDanhKhoaHocs, "IdChucDanhKhoaHoc", "ChucDanhKhoaHoc");
+                ViewData["IdChuyenMonDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao");
+                ViewData["IdTonGiao"] = new SelectList(_context.DmTonGiaos, "IdTonGiao", "TonGiao");
+                ViewData["IdDanToc"] = new SelectList(_context.DmDanTocs, "IdDanToc", "DanToc");
+                ViewData["IdGiaDinhChinhSach"] = new SelectList(_context.DmHoGiaDinhChinhSaches, "IdHoGiaDinhChinhSach", "HoGiaDinhChinhSach");
+                ViewData["IdGioiTinh"] = new SelectList(_context.DmGioiTinhs, "IdGioiTinh", "GioiTinh");
+                ViewData["IdKhungNangLucNgoaiNguc"] = new SelectList(_context.DmKhungNangLucNgoaiNgus, "IdKhungNangLucNgoaiNgu", "TenKhungNangLucNgoaiNgu");
+                ViewData["IdNgoaiNgu"] = new SelectList(_context.DmNgoaiNgus, "IdNgoaiNgu", "NgoaiNgu");
+                ViewData["IdQuocTich"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "TenNuoc");
+                ViewData["IdThuongBinhHang"] = new SelectList(_context.DmHangThuongBinhs, "IdHangThuongBinh", "HangThuongBinh");
+                ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "TrinhDoDaoTao");
+                ViewData["IdTrinhDoLyLuanChinhTri"] = new SelectList(_context.DmTrinhDoLyLuanChinhTris, "IdTrinhDoLyLuanChinhTri", "TenTrinhDoLyLuanChinhTri");
+                ViewData["IdTrinhDoQuanLyNhaNuoc"] = new SelectList(_context.DmTrinhDoQuanLyNhaNuocs, "IdTrinhDoQuanLyNhaNuoc", "TrinhDoQuanLyNhaNuoc");
+                ViewData["IdTrinhDoTinHoc"] = new SelectList(_context.DmTrinhDoTinHocs, "IdTrinhDoTinHoc", "TrinhDoTinHoc");
+            } else {
+                //Mô hình giải thích ở phía trên chỉ khác biệt ở chổ có thêm phần value của selectlist mà đang được chọn
+                ViewData["IdChucDanhKhoaHoc"] = new SelectList(_context.DmChucDanhKhoaHocs, "IdChucDanhKhoaHoc", "ChucDanhKhoaHoc", tbNguoi.IdChucDanhKhoaHoc);
+                ViewData["IdChuyenMonDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao", tbNguoi.IdChuyenMonDaoTao);
+                ViewData["IdTonGiao"] = new SelectList(_context.DmTonGiaos, "IdTonGiao", "TonGiao", tbNguoi.IdDanToc);
+                ViewData["IdDanToc"] = new SelectList(_context.DmDanTocs, "IdDanToc", "DanToc", tbNguoi.IdDanToc);
+                ViewData["IdGiaDinhChinhSach"] = new SelectList(_context.DmHoGiaDinhChinhSaches, "IdHoGiaDinhChinhSach", "HoGiaDinhChinhSach", tbNguoi.IdGiaDinhChinhSach);
+                ViewData["IdGioiTinh"] = new SelectList(_context.DmGioiTinhs, "IdGioiTinh", "GioiTinh", tbNguoi.IdGioiTinh);
+                ViewData["IdKhungNangLucNgoaiNguc"] = new SelectList(_context.DmKhungNangLucNgoaiNgus, "IdKhungNangLucNgoaiNgu", "TenKhungNangLucNgoaiNgu", tbNguoi.IdKhungNangLucNgoaiNguc);
+                ViewData["IdNgoaiNgu"] = new SelectList(_context.DmNgoaiNgus, "IdNgoaiNgu", "NgoaiNgu", tbNguoi.IdNgoaiNgu);
+                ViewData["IdQuocTich"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "TenNuoc", tbNguoi.IdQuocTich);
+                ViewData["IdThuongBinhHang"] = new SelectList(_context.DmHangThuongBinhs, "IdHangThuongBinh", "HangThuongBinh", tbNguoi.IdThuongBinhHang);
+                ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "TrinhDoDaoTao", tbNguoi.IdTrinhDoDaoTao);
+                ViewData["IdTrinhDoLyLuanChinhTri"] = new SelectList(_context.DmTrinhDoLyLuanChinhTris, "IdTrinhDoLyLuanChinhTri", "TenTrinhDoLyLuanChinhTri", tbNguoi.IdTrinhDoLyLuanChinhTri);
+                ViewData["IdTrinhDoQuanLyNhaNuoc"] = new SelectList(_context.DmTrinhDoQuanLyNhaNuocs, "IdTrinhDoQuanLyNhaNuoc", "TrinhDoQuanLyNhaNuoc", tbNguoi.IdTrinhDoQuanLyNhaNuoc);
+                ViewData["IdTrinhDoTinHoc"] = new SelectList(_context.DmTrinhDoTinHocs, "IdTrinhDoTinHoc", "TrinhDoTinHoc", tbNguoi.IdTrinhDoTinHoc);
+            }
+        }
+        //In lỗi ra file
+        private void export_message(string Message) {
+            //Thêm tên để setup cho dễ
+            string ten_folder_view = "Nguoi";
+            // In lỗi vào file
+            //Tạo UTF-8 encoding để encode ký tự về UTF-8
+            UTF8Encoding unicode = new UTF8Encoding();
+            //Tên của file để in lỗi
+            string filename = Path.Combine(Environment.CurrentDirectory, $"Views/{ten_folder_view}/error.txt"); 
+            //Tạo dãy byte để in vào filestream
+            byte[] bytes = unicode.GetBytes(Message);
+            //Mở file
+            using(FileStream file = new FileStream(filename, FileMode.OpenOrCreate)) {
+                //Xóa nội dung của file
+                file.SetLength(0);
+                //In lỗi vào file
+                file.Write(bytes, 0, bytes.Length);
+                //Đóng file
+                file.Close();
+            }
         }
     }
 }
