@@ -19,10 +19,10 @@ namespace C500Hemis.Controllers.CTDT
         }
 
         // GET: ChuongTrinhDaoTao
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index() // lấy 
         {
             try {
-                var hemisContext = _context.TbChuongTrinhDaoTaos
+                var hemisContext = _context.TbChuongTrinhDaoTaos // truy xuất dữ liệu từ database
                 .Include(t => t.IdDonViCapBangNavigation)
                 .Include(t => t.IdHocCheDaoTaoNavigation)
                 .Include(t => t.IdLoaiChuongTrinhDaoTaoNavigation)
@@ -31,7 +31,7 @@ namespace C500Hemis.Controllers.CTDT
                 .Include(t => t.IdQuocGiaCuaTruSoChinhNavigation)
                 .Include(t => t.IdTrangThaiCuaChuongTrinhNavigation)
                 .Include(t => t.IdTrinhDoDaoTaoNavigation);
-                return View(await hemisContext.ToListAsync());
+                return View(await hemisContext.ToListAsync()); // trả về View danh sách các CTĐT
             } catch ( Exception ex ) 
             {
                 return BadRequest(); 
@@ -62,7 +62,6 @@ namespace C500Hemis.Controllers.CTDT
                 {
                     return NotFound();
                 }
-
                 return View(tbChuongTrinhDaoTao);
             } catch (Exception ex) 
             { 
@@ -142,14 +141,14 @@ namespace C500Hemis.Controllers.CTDT
                 {
                     return NotFound();
                 }
-                ViewData["IdDonViCapBang"] = new SelectList(_context.DmDonViCapBangs, "IdDonViCapBang", "IdDonViCapBang", tbChuongTrinhDaoTao.IdDonViCapBang);
-                ViewData["IdHocCheDaoTao"] = new SelectList(_context.DmHocCheDaoTaos, "IdHocCheDaoTao", "IdHocCheDaoTao", tbChuongTrinhDaoTao.IdHocCheDaoTao);
-                ViewData["IdLoaiChuongTrinhDaoTao"] = new SelectList(_context.DmLoaiChuongTrinhDaoTaos, "IdLoaiChuongTrinhDaoTao", "IdLoaiChuongTrinhDaoTao", tbChuongTrinhDaoTao.IdLoaiChuongTrinhDaoTao);
-                ViewData["IdLoaiChuongTrinhLienKetDaoTao"] = new SelectList(_context.DmLoaiChuongTrinhLienKetDaoTaos, "IdLoaiChuongTrinhLienKetDaoTao", "IdLoaiChuongTrinhLienKetDaoTao", tbChuongTrinhDaoTao.IdLoaiChuongTrinhLienKetDaoTao);
-                ViewData["IdNganhDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "IdNganhDaoTao", tbChuongTrinhDaoTao.IdNganhDaoTao);
-                ViewData["IdQuocGiaCuaTruSoChinh"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "IdQuocTich", tbChuongTrinhDaoTao.IdQuocGiaCuaTruSoChinh);
-                ViewData["IdTrangThaiCuaChuongTrinh"] = new SelectList(_context.DmTrangThaiChuongTrinhDaoTaos, "IdTrangThaiChuongTrinhDaoTao", "IdTrangThaiChuongTrinhDaoTao", tbChuongTrinhDaoTao.IdTrangThaiCuaChuongTrinh);
-                ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "IdTrinhDoDaoTao", tbChuongTrinhDaoTao.IdTrinhDoDaoTao);
+                ViewData["IdDonViCapBang"] = new SelectList(_context.DmDonViCapBangs, "IdDonViCapBang", "DonViCapBang", tbChuongTrinhDaoTao.IdDonViCapBang);
+                ViewData["IdHocCheDaoTao"] = new SelectList(_context.DmHocCheDaoTaos, "IdHocCheDaoTao", "HocCheDaoTao", tbChuongTrinhDaoTao.IdHocCheDaoTao);
+                ViewData["IdLoaiChuongTrinhDaoTao"] = new SelectList(_context.DmLoaiChuongTrinhDaoTaos, "IdLoaiChuongTrinhDaoTao", "LoaiChuongTrinhDaoTao", tbChuongTrinhDaoTao.IdLoaiChuongTrinhDaoTao);
+                ViewData["IdLoaiChuongTrinhLienKetDaoTao"] = new SelectList(_context.DmLoaiChuongTrinhLienKetDaoTaos, "IdLoaiChuongTrinhLienKetDaoTao", "LoaiChuongTrinhLienKetDaoTao", tbChuongTrinhDaoTao.IdLoaiChuongTrinhLienKetDaoTao);
+                ViewData["IdNganhDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao", tbChuongTrinhDaoTao.IdNganhDaoTao);
+                ViewData["IdQuocGiaCuaTruSoChinh"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "TenNuoc", tbChuongTrinhDaoTao.IdQuocGiaCuaTruSoChinh);
+                ViewData["IdTrangThaiCuaChuongTrinh"] = new SelectList(_context.DmTrangThaiChuongTrinhDaoTaos, "IdTrangThaiChuongTrinhDaoTao", "TrangThaiChuongTrinhDaoTao", tbChuongTrinhDaoTao.IdTrangThaiCuaChuongTrinh);
+                ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "TrinhDoDaoTao", tbChuongTrinhDaoTao.IdTrinhDoDaoTao);
                 return View(tbChuongTrinhDaoTao);
             } catch (Exception ex)
             { 

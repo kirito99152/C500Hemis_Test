@@ -1,17 +1,66 @@
 ﻿@model C500Hemis.Models.TbChuongTrinhDaoTao
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "CHI TIẾT CTĐT";
 }
 
-<h1>Details</h1>
+@section Styles {
+    <style>
+  
 
-<div>
-    <h4>TbChuongTrinhDaoTao</h4>
-    <hr />
+        .web-form {
+     
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+ư
+        }
+
+            .row > dt, .row > dd {
+                flex: 1 1 50%; /* Chia đôi chiều rộng của mỗi trường thông tin */
+                padding: 5px;
+            }
+
+            .row > dt {
+                font-weight: bold;
+            }
+
+        /* Thêm khoảng cách giữa 2 cột */
+        .col-half {
+            width: 50%;
+            box-sizing: border-box;
+        }
+
+
+        /* Đảm bảo chia thành 2 cột, mỗi cột chứa 12 trường */
+        .left-column, .right-column {
+            display: inline-block;
+            vertical-align: top;
+            width: 50%;
+        }
+
+            /* Đặt cột trái và phải */
+            .left-column dt, .right-column dt, .left-column dd, .right-column dd {
+                display: block;
+            }
+    </style>
+}
+
+<h1 style="text-align:center">THÔNG TIN CHI TIẾT CHƯƠNG TRÌNH ĐÀO TẠO</h1>
+
+<div class="web-form">
+
+    <div class="left-column">
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MaChuongTrinhDaoTao)
+            Mã CTĐT
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.MaChuongTrinhDaoTao)
@@ -23,7 +72,7 @@
             @Html.DisplayFor(model => model.TenChuongTrinh)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TenChuongTrinhBangTiengAnh)
+            Tên bằng tiếng Anh
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.TenChuongTrinhBangTiengAnh)
@@ -71,7 +120,7 @@
             @Html.DisplayFor(model => model.LoaiChungChiDuocChapThuan)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DonViThucHienChuongTrinh)
+            Đơn vị thực hiện
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.DonViThucHienChuongTrinh)
@@ -82,6 +131,11 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.ChuanDauRaVeNgoaiNgu)
         </dd>
+        </dl> 
+        </div>
+
+            <div class="right-column">
+                <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ChuanDauRaVeTinHoc)
         </dt>
@@ -101,54 +155,55 @@
             @Html.DisplayFor(model => model.HocPhiTaiNuocNgoai)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdDonViCapBangNavigation)
+            @Html.DisplayNameFor(model => model.IdDonViCapBang)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdDonViCapBangNavigation.IdDonViCapBang)
+            @Html.DisplayFor(model => model.IdDonViCapBangNavigation.DonViCapBang)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdHocCheDaoTaoNavigation)
+            Học chế 
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdHocCheDaoTaoNavigation.IdHocCheDaoTao)
+            @Html.DisplayFor(model => model.IdHocCheDaoTaoNavigation.HocCheDaoTao)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdLoaiChuongTrinhDaoTaoNavigation)
+            Hình thức CTĐT
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdLoaiChuongTrinhDaoTaoNavigation.IdLoaiChuongTrinhDaoTao)
+            @Html.DisplayFor(model => model.IdLoaiChuongTrinhDaoTaoNavigation.LoaiChuongTrinhDaoTao)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdLoaiChuongTrinhLienKetDaoTaoNavigation)
+            Chương trình liên kết
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdLoaiChuongTrinhLienKetDaoTaoNavigation.IdLoaiChuongTrinhLienKetDaoTao)
+            @Html.DisplayFor(model => model.IdLoaiChuongTrinhLienKetDaoTaoNavigation.LoaiChuongTrinhLienKetDaoTao)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdNganhDaoTaoNavigation)
+            Ngành đào tạo
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdNganhDaoTaoNavigation.IdNganhDaoTao)
+            @Html.DisplayFor(model => model.IdNganhDaoTaoNavigation.NganhDaoTao)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdQuocGiaCuaTruSoChinhNavigation)
+            Quốc gia của trụ sở chính
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdQuocGiaCuaTruSoChinhNavigation.IdQuocTich)
+            @Html.DisplayFor(model => model.IdQuocGiaCuaTruSoChinhNavigation.TenNuoc)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdTrangThaiCuaChuongTrinhNavigation)
+            Trạng thái CTĐT
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdTrangThaiCuaChuongTrinhNavigation.IdTrangThaiChuongTrinhDaoTao)
+            @Html.DisplayFor(model => model.IdTrangThaiCuaChuongTrinhNavigation.TrangThaiChuongTrinhDaoTao)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdTrinhDoDaoTaoNavigation)
+            Trình độ CTĐT
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdTrinhDoDaoTaoNavigation.IdTrinhDoDaoTao)
+            @Html.DisplayFor(model => model.IdTrinhDoDaoTaoNavigation.TrinhDoDaoTao)
         </dd>
     </dl>
+</div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.IdChuongTrinhDaoTao">Edit</a> |
