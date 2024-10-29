@@ -19,6 +19,9 @@
         #views th, td{
             border-bottom: 2px solid #ddd;
         }
+        .dtr-modal table {
+            width: 100%;
+        }
     </style>
 }
 
@@ -103,7 +106,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.IdTrinhDoTinHocNavigation)
             </th>
-            <th class="_nonorder">Action</th>
+            <th class="_nonorder">Hành động</th>
         </tr>
     </thead>
     <tbody>
@@ -113,7 +116,7 @@
         @foreach (var item in Model) {
             dem++;
             <tr>
-                <td></td>
+            <td></td>
             <td>
                 @dem
             </td>
@@ -190,9 +193,9 @@
                 @Html.DisplayFor(modelItem => item.IdTrinhDoTinHocNavigation!.TrinhDoTinHoc)
             </td>
             <td>
-                    <button class="btn btn-primary" onclick="window.location.href = '@Url.Action("Edit", new {id = item.IdNguoi})'">Sửa</button>
-                    <button class="btn btn-primary" onclick="window.location.href = '@Url.Action("Details", new {id = item.IdNguoi})'">Chi tiết</button>
-                    <button class="btn btn-danger" onclick="window.location.href = '@Url.Action("Delete", new {id = item.IdNguoi})'">Xóa</button>
+                    <button class="btn btn-primary" onclick="window.location.href = '@Url.Action("Edit", new {id = item.IdNguoi})'"><i class="fa-sharp-duotone fa-solid fa-user-pen"></i> Sửa</button>
+                    <button class="btn btn-primary" onclick="window.location.href = '@Url.Action("Details", new {id = item.IdNguoi})'"><i class="fa-sharp fa-solid fa-circle-info"></i> Chi tiết</button>
+                    <button class="btn btn-danger" onclick="window.location.href = '@Url.Action("Delete", new {id = item.IdNguoi})'"><i class="fa-solid fa-trash"></i> Xóa</button>
             </td>
         </tr>
 }
@@ -202,6 +205,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-2.1.8/b-3.1.2/b-colvis-3.1.2/b-html5-3.1.2/b-print-3.1.2/r-3.0.3/datatables.min.js"></script>
+    <script src="https://kit.fontawesome.com/5c202d0407.js" crossorigin="anonymous"></script>
     <script>
         //Datatable trong datatable.net. Tìm hiểu thêm thông tin: https://datatables.net/manual/
         var table = new DataTable("#views", {
@@ -222,7 +226,20 @@
             order: [1, 'asc'],
             responsive: {
                 details: {
-                    type: 'column'
+                    display: DataTable.Responsive.display.modal({
+                        header: function (row) {
+                            var data = row.data();
+                            return 'Thông tin của ' + data[2];
+                        }
+                    }),
+                    renderer: function (api, rowIdx, columns) {
+                        var data = $.map(columns, function (col, i) {
+                            return col.hidden
+                                ? `<tr><td class="p-3">${col.title}</td><td class="p-3">${col.data}</td></tr>`
+                                : '';
+                        }).join('');
+                        return data ? $('<table/>').append(data) : false;
+                    }
                 }
             },
             language: {
@@ -230,6 +247,8 @@
                 search: "Tìm kiếm",
                 //Điều chỉnh phần hiển thị thông tin của table - Xem thêm thông tin: https://datatables.net/reference/option/language.info
                 info: "Tổng cộng _TOTAL_ bản ghi",
+                zeroRecords: "Không tìm thấy bản ghi nào"
+
             },
             createdRow: (row, data, index) => {
             },

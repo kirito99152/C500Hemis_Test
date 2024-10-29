@@ -118,11 +118,12 @@ namespace C500Hemis.Controllers.CB
         {
             try
             {
-                //Kiểm tra xem đã tồn tại IdNguoi chưa nếu tồn tại thêm ModelError cho IdNguoi
+                //Kiểm tra xem đã tồn tại IdNguoi chưa nếu tồn tại thêm ModelError cho IdNguoi\
+                check_null(tbNguoi);
                 if (TbNguoiExists(tbNguoi.IdNguoi)) ModelState.AddModelError("IdNguoi", "Đã tồn tại!");
                 if (ModelState.IsValid)
                 {
-                    //Không trùng INSERT vào TABLE qua method ADD của HemisContext (EF)
+                    //Không trùng thì INSERT vào TABLE qua method ADD của HemisContext (EF)
                     _context.Add(tbNguoi);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -171,7 +172,7 @@ namespace C500Hemis.Controllers.CB
                 {
                     return NotFound();
                 }
-
+                check_null(tbNguoi);
                 if (ModelState.IsValid)
                 {
                     //Kiểm tra quá trình update
@@ -267,6 +268,28 @@ namespace C500Hemis.Controllers.CB
         private bool TbNguoiExists(int id)
         {
             return _context.TbNguois.Any(e => e.IdNguoi == id);
+        }
+
+        //Kiểm tra giá trị
+
+        private void check_null(TbNguoi tbNguoi)
+        {
+            if (tbNguoi.Ho == null) ModelState.AddModelError("Ho", "Vui lòng nhập họ!");
+            if (tbNguoi.Ten == null) ModelState.AddModelError("Ten", "Vui lòng nhập tên!");
+            if (tbNguoi.IdQuocTich == null) ModelState.AddModelError("IdQuocTich", "Không được bỏ trống!");
+            if (tbNguoi.IdDanToc == null) ModelState.AddModelError("IdDanToc", "Không được bỏ trống!");
+            if (tbNguoi.IdChucDanhKhoaHoc == null) ModelState.AddModelError("IdChucDanhKhoaHoc", "Không được bỏ trống!");
+            if (tbNguoi.IdChuyenMonDaoTao == null) ModelState.AddModelError("IdChuyenMonDaoTao", "Không được bỏ trống!");
+            if (tbNguoi.IdTonGiao == null) ModelState.AddModelError("IdTonGiao", "Không được bỏ trống!");
+            if (tbNguoi.IdGioiTinh == null) ModelState.AddModelError("IdGioiTinh", "Không được bỏ trống!");
+            if (tbNguoi.IdKhungNangLucNgoaiNguc == null) ModelState.AddModelError("IdKhungNangLucNgoaiNguc", "Không được bỏ trống!");
+            if (tbNguoi.IdNgoaiNgu == null) ModelState.AddModelError("IdNgoaiNgu", "Không được bỏ trống!");
+            if (tbNguoi.IdTrinhDoDaoTao == null) ModelState.AddModelError("IdTrinhDoDaoTao", "Không được bỏ trống!");
+            if (tbNguoi.IdTrinhDoLyLuanChinhTri == null) ModelState.AddModelError("IdTrinhDoLyLuanChinhTri", "Không được bỏ trống!");
+            if (tbNguoi.IdTrinhDoQuanLyNhaNuoc == null) ModelState.AddModelError("IdTrinhDoQuanLyNhaNuoc", "Không được bỏ trống!");
+            if (tbNguoi.IdTrinhDoTinHoc == null) ModelState.AddModelError("IdTrinhDoTinHoc", "Không được bỏ trống!");
+            if (tbNguoi.IdThuongBinhHang == null) ModelState.AddModelError("IdThuongBinhHang", "Không được bỏ trống!");
+            if (tbNguoi.IdGiaDinhChinhSach == null) ModelState.AddModelError("IdGiaDinhChinhSach", "Không được bỏ trống!");
         }
 
         //Tạo các select_list
