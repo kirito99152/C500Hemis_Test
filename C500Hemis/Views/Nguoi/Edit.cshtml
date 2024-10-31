@@ -14,20 +14,16 @@
         .form-group{
             width: 48%;
         }
-        .form-container {
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
-            gap: 20px;
-        }
-        .form-container h2 {
+        h2 {
             text-align: center;
         }
     </style>
 }
 
-<div class="row justify-content-center bg-light p-lg-5">
+<div class="row justify-content-center p-lg-5">
     <div class="col-lg-9">
-        <form asp-action="Edit">
-            <div class="d-flex p-4 flex-wrap justify-content-center form-container">
+        <form asp-action="Edit" id="form">
+            <div class="d-flex p-4 flex-wrap justify-content-center shadow-lg gap-2 rounded">
                 <div class="container">
                     <h2>Chỉnh sửa thông tin</h2>
                 </div>
@@ -145,7 +141,7 @@
                     <select asp-for="IdTrinhDoTinHoc" class="form-control" asp-items="ViewBag.IdTrinhDoTinHoc"></select>
                 </div>
                 <div class="form-group d-flex justify-content-center" style="width: 90%">
-                    <button class="btn btn-primary"><a asp-action="Index">Quay lại</a></button>
+                    <button class="btn btn-primary" onclick="window.location.href = '@Url.Action("Index")'">Quay lại</button>
                     <input type="submit" value="Xác nhận" class="btn btn-primary ms-3" />
                 </div>
             </div>
@@ -153,51 +149,14 @@
     </div>
 </div>
 
-@*Tạo tìm kiếm cho select list dùng datalist*@
-<script>
-    var select = document.querySelectorAll("select");
-    var data = {};
-    for (var i = 0; i < select.length; ++i) {
-        select[i].hidden = true;
-        let cr = {};
-        let idlist = "datalist" + i.toString();
-        let input = document.createElement("input");
-        let datalist = document.createElement("datalist");
-        let options = select[i].options;
-        let validate = document.createElement("span");
-        input.placeholder = "Nhập để tìm kiếm...";
-        input.className = "form-control";
-        input.setAttribute("list", idlist);
-        input.setAttribute("selid", select[i].id);
-        input.value = select[i].options[select[i].selectedIndex].text;
-        input.addEventListener("change", function (e) {
-            let selid = e.target.getAttribute("selid");
-            let validate = document.getElementById("Validate_" + selid);
-            if (typeof data[selid][e.target.value] !== 'undefined') {
-                document.getElementById(selid).selectedIndex = data[selid][e.target.value];
-                validate.innerHTML = "";
-            } else {
-                validate.innerHTML = validate.getAttribute("msg");
-            }
-        });
-        for (var j = 0; j < options.length; ++j) {
-            cr[options[j].text] = j;
-            let option = document.createElement("option");
-            option.value = options[j].text;
-            datalist.appendChild(option);
-        }
-        datalist.id = idlist;
-        data[select[i].id] = cr;
-        validate.className = "text-danger";
-        validate.id = "Validate_" + select[i].id;
-        validate.setAttribute("msg", "Không hợp lệ");
-        select[i].after(input, datalist, validate);
-    }
-</script>
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/kirito99152/search_select@main/search_select.js"></script>
+    @*Tạo tìm kiếm cho select list dùng js library*@
+    <script>
+        var search = new search_select("form");
+        search.run();
+    </script>
 }

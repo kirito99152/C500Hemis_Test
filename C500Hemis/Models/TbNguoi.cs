@@ -10,6 +10,7 @@ namespace C500Hemis.Models;
 public partial class TbNguoi
 {
     [DisplayName("Id Người")]
+    [Required(ErrorMessage = "Không được bỏ trống ô này!")]
     public int IdNguoi { get; set; }
 
     [DisplayName("Họ ")]
