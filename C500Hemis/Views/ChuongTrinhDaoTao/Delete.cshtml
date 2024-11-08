@@ -6,12 +6,12 @@
 
 @section Styles {
     <style>
-  
 
+        /* Phần nội dung */
         .web-form {
-            border-top: 15px solid red; /* Trùng màu viền bảng Index */
-     margin-top: 20px;
-     background-color: #fad8d8; /* Đỏ nhạt */ 
+            border-top: 15px solid red; /* đỏ */
+            margin-top: 20px;
+            background-color: #fadfdf; /* đỏ nhạt */
             display: flex;
             justify-content: center;
             padding: 20px;
@@ -19,18 +19,24 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
         }
 
+        /* Định dạng 2 cột nội dung, mỗi cột chứa 12 trường */
+        .left-column, .right-column {
+            display: inline-block;
+            vertical-align: top;
+            width: 50%;
+        }
+
         .row {
             display: flex;
             flex-wrap: wrap;
-
         }
 
-            .row > dt, .row > dd {
+            .row dt, .row dd {
                 flex: 1 1 50%; /* Chia đôi chiều rộng của mỗi trường thông tin */
                 padding: 5px;
             }
 
-            .row > dt {
+            .row dt {
                 font-weight: bold;
             }
 
@@ -40,20 +46,7 @@
             box-sizing: border-box;
         }
 
-
-        /* Đảm bảo chia thành 2 cột, mỗi cột chứa 12 trường */
-        .left-column, .right-column {
-            display: inline-block;
-            vertical-align: top;
-            width: 50%;
-        }
-
-            /* Đặt cột trái và phải */
-            .left-column dt, .right-column dt, .left-column dd, .right-column dd {
-                display: block;
-            }
-
-            /* Phần cuối: khối chứa 2 button */
+        /* Phần cuối: khối chứa 2 button */
         .combo-button {
             display: flex; /* Đặt 2 button trên 1 trục ngang từ trái sang phải */
             margin-top: 20px;
@@ -61,52 +54,56 @@
             border-radius: 10px;
         }
 
-                /* Định dạng button "xác nhận đăng kí" */
-                .button-submit {
-                    background-color: #fad8d8; /* đỏ nhạt */
-                    border-radius: 10px;
-                    font-size: 20px;
-                    color: black;
-                    font-weight: bold;
-                    cursor: pointer;
-                    transition: background-color color 0.3s;
-                    border: none;
-                    width: 50%;
-                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
-                    padding: 15px;
-                    margin-right: 10px; 
-                    text-decoration: none;
-                    text-align: center;
-                    }
-                        .button-submit:hover {
-                           background-color: red; /* Màu đỏ đậm hơn khi hover */
-                           color: white;
-                           font-style: italic;
-                        }
-        
-                /* Định dang button "quay lại danh sách" */
-                .button-back {
-                    background-color: #edf7f1; /* Màu xanh lá cây nhạt */
-                    font-size: 20px;
-                    font-weight: bold;
-                    color: black;
-                    border-radius: 10px;
-                    text-decoration: none;
-                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
-                    transition: background-color 0.3s ease, transform 0.3s ease;
-                    text-align: center;
-                    width: 50%;
-                    padding: 15px;
-                }
-                        .button-back:hover {
-                            background-color: #009879; /* màu xanh đậm, trùng màu cột tiêu đề */
-                            color: white;
-                            font-style: italic;
-                        }
+        /* Định dạng button "xác nhận đăng kí" */
+        .button-submit {
+            background-color: #fad8d8; /* đỏ nhạt */
+            border-radius: 10px;
+            font-size: 20px;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color color 0.3s;
+            border: none;
+            width: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+            padding: 15px;
+            margin-right: 10px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+            .button-submit:hover {
+                background-color: red; /* Màu đỏ đậm hơn khi hover */
+                color: white;
+                font-style: italic;
+            }
+
+        /* Định dang button "quay lại danh sách" */
+        .button-back {
+            background-color: #edf7f1; /* Màu xanh lá cây nhạt */
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+            border-radius: 10px;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            text-align: center;
+            width: 50%;
+            padding: 15px;
+        }
+
+            .button-back:hover {
+                background-color: #009879; /* màu xanh đậm, trùng màu cột tiêu đề */
+                color: white;
+                font-style: italic;
+            }
     </style>
+     
 }
 
 <h1 style="text-align:center"><b>BẠN CÓ MUỐN XÓA CHƯƠNG TRÌNH ĐÀO TẠO NÀY KHÔNG?</b></h1>
+<h2 style="text-align:center"><b>Ngành: @Html.DisplayFor(model => model.IdNganhDaoTaoNavigation.NganhDaoTao)</b></h2>
 
 <div class="web-form">
 
@@ -260,6 +257,17 @@
 </div>
 <form class="combo-button" asp-action="Delete">
         <input type="hidden" asp-for="IdChuongTrinhDaoTao" />
-        <input class="button-submit" type="submit" value="XÁC NHẬN XÓA CTĐT" class="btn btn-danger" /> 
+        <input class="button-submit" type="submit" value="XÁC NHẬN XÓA CTĐT" /> 
         <a class="button-back" asp-action="Index">QUAY LẠI DANH SÁCH</a>
     </form>
+
+@section Scripts {
+    <!-- Một thông báo nhỏ -->
+    <script>
+        document.querySelector('.button-submit').addEventListener('click', function (event) {
+            if (!confirm('Mời bạn kiểm tra kĩ lưỡng thông tin trước khi xóa, tránh nhầm lẫn sai sót. Chúc bạn một ngày tốt lành. Sau khi bấm xác nhận sẽ xóa vĩnh viễn chương trình đào tạo này!!!')) {
+                event.preventDefault();
+            }
+        });
+    </script>
+}
