@@ -6,12 +6,12 @@
 
 @section Styles {
     <style>
-  
 
+        /* Phần nội dung */
         .web-form {
             border-top: 15px solid #009879; /* Trùng màu viền bảng Index */
-     margin-top: 20px;
-     background-color: #edf7f1; /* Xanh lá nhạt */ 
+            margin-top: 20px;
+            background-color: #edf7f1; /* Xanh lá nhạt */ 
             display: flex;
             justify-content: center;
             padding: 20px;
@@ -19,39 +19,29 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
         }
 
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-
-        }
-
-            .row > dt, .row > dd {
-                flex: 1 1 50%; /* Chia đôi chiều rộng của mỗi trường thông tin */
-                padding: 5px;
-            }
-
-            .row > dt {
-                font-weight: bold;
-            }
-
-        /* Thêm khoảng cách giữa 2 cột */
-        .col-half {
-            width: 50%;
-            box-sizing: border-box;
-        }
-
-
-        /* Đảm bảo chia thành 2 cột, mỗi cột chứa 12 trường */
+        /* Định dạng 2 cột nội dung, mỗi cột chứa 12 trường */
         .left-column, .right-column {
             display: inline-block;
             vertical-align: top;
             width: 50%;
         }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+                .row dt, .row dd {
+                    flex: 1 1 50%; /* Chia đôi chiều rộng của mỗi trường thông tin */
+                    padding: 5px;
+                }
+                .row dt {
+                    font-weight: bold;
+                }
 
-            /* Đặt cột trái và phải */
-            .left-column dt, .right-column dt, .left-column dd, .right-column dd {
-                display: block;
-            }
+                /* Thêm khoảng cách giữa 2 cột */
+                .col-half {
+                    width: 50%;
+                    box-sizing: border-box;
+                }
 
             /* Phần cuối: khối chứa 2 button */
         .combo-button {
@@ -106,158 +96,165 @@
     </style>
 }
 
+<!-- Phần tiêu đề -->
 <h1 style="text-align:center"><b>THÔNG TIN CHI TIẾT CHƯƠNG TRÌNH ĐÀO TẠO</b></h1>
+<h2 style="text-align:center"><b>Ngành: @Html.DisplayFor(model => model.IdNganhDaoTaoNavigation.NganhDaoTao)</b></h2>
 
+<!-- Phần nội dung -->
 <div class="web-form">
 
+    <!-- Phần thứ 1 nằm bên trái -->
     <div class="left-column">
-    <dl class="row">
-        <dt class = "col-sm-2">
-            Mã Chương trình đào tạo
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MaChuongTrinhDaoTao)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TenChuongTrinh)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TenChuongTrinh)
-        </dd>
-        <dt class = "col-sm-2">
-            Tên bằng tiếng Anh
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TenChuongTrinhBangTiengAnh)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NamBatDauTuyenSinh)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NamBatDauTuyenSinh)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TenCoSoDaoTaoNuocNgoai)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TenCoSoDaoTaoNuocNgoai)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DiaDiemDaoTao)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DiaDiemDaoTao)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NgayBanHanhChuanDauRa)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NgayBanHanhChuanDauRa)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ThoiGianDaoTaoChuan)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ThoiGianDaoTaoChuan)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ChuanDauRa)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ChuanDauRa)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LoaiChungChiDuocChapThuan)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LoaiChungChiDuocChapThuan)
-        </dd>
-        <dt class = "col-sm-2">
-            Đơn vị thực hiện
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DonViThucHienChuongTrinh)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ChuanDauRaVeNgoaiNgu)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ChuanDauRaVeNgoaiNgu)
-        </dd>
+        <dl class="row">
+            <dt class = "col-sm-2">
+                Mã Chương trình đào tạo
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.MaChuongTrinhDaoTao)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.TenChuongTrinh)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.TenChuongTrinh)
+            </dd>
+            <dt class = "col-sm-2">
+                Tên bằng tiếng Anh
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.TenChuongTrinhBangTiengAnh)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.NamBatDauTuyenSinh)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.NamBatDauTuyenSinh)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.TenCoSoDaoTaoNuocNgoai)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.TenCoSoDaoTaoNuocNgoai)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.DiaDiemDaoTao)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.DiaDiemDaoTao)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.NgayBanHanhChuanDauRa)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.NgayBanHanhChuanDauRa)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.ThoiGianDaoTaoChuan)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.ThoiGianDaoTaoChuan)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.ChuanDauRa)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.ChuanDauRa)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.LoaiChungChiDuocChapThuan)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.LoaiChungChiDuocChapThuan)
+            </dd>
+            <dt class = "col-sm-2">
+                Đơn vị thực hiện
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.DonViThucHienChuongTrinh)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.ChuanDauRaVeNgoaiNgu)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.ChuanDauRaVeNgoaiNgu)
+            </dd>
         </dl> 
-        </div>
+    </div>
 
-            <div class="right-column">
-                <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ChuanDauRaVeTinHoc)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ChuanDauRaVeTinHoc)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HocPhiTaiVietNam)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HocPhiTaiVietNam) VNĐ
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HocPhiTaiNuocNgoai)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HocPhiTaiNuocNgoai) VNĐ
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdDonViCapBang)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdDonViCapBangNavigation.DonViCapBang)
-        </dd>
-        <dt class = "col-sm-2">
-            Học chế 
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdHocCheDaoTaoNavigation.HocCheDaoTao)
-        </dd>
-        <dt class = "col-sm-2">
-            Hình thức CTĐT
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdLoaiChuongTrinhDaoTaoNavigation.LoaiChuongTrinhDaoTao)
-        </dd>
-        <dt class = "col-sm-2">
-            Chương trình liên kết
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdLoaiChuongTrinhLienKetDaoTaoNavigation.LoaiChuongTrinhLienKetDaoTao)
-        </dd>
-        <dt class = "col-sm-2">
-            Ngành đào tạo
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdNganhDaoTaoNavigation.NganhDaoTao)
-        </dd>
-        <dt class = "col-sm-2">
-            Quốc gia của trụ sở chính
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdQuocGiaCuaTruSoChinhNavigation.TenNuoc)
-        </dd>
-        <dt class = "col-sm-2">
-            Trạng thái CTĐT
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdTrangThaiCuaChuongTrinhNavigation.TrangThaiChuongTrinhDaoTao)
-        </dd>
-        <dt class = "col-sm-2">
-            Trình độ CTĐT
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdTrinhDoDaoTaoNavigation.TrinhDoDaoTao)
-        </dd>
-    </dl>
+        <!-- Phần thứ 2 nằm bên phải -->
+    <div class="right-column">
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.ChuanDauRaVeTinHoc)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.ChuanDauRaVeTinHoc)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.HocPhiTaiVietNam)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.HocPhiTaiVietNam) VNĐ
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.HocPhiTaiNuocNgoai)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.HocPhiTaiNuocNgoai) VNĐ
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.IdDonViCapBang)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.IdDonViCapBangNavigation.DonViCapBang)
+            </dd>
+            <dt class = "col-sm-2">
+                Học chế 
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.IdHocCheDaoTaoNavigation.HocCheDaoTao)
+            </dd>
+            <dt class = "col-sm-2">
+                Hình thức CTĐT
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.IdLoaiChuongTrinhDaoTaoNavigation.LoaiChuongTrinhDaoTao)
+            </dd>
+            <dt class = "col-sm-2">
+                Chương trình liên kết
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.IdLoaiChuongTrinhLienKetDaoTaoNavigation.LoaiChuongTrinhLienKetDaoTao)
+            </dd>
+            <dt class = "col-sm-2">
+                Ngành đào tạo
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.IdNganhDaoTaoNavigation.NganhDaoTao)
+            </dd>
+            <dt class = "col-sm-2">
+                Quốc gia của trụ sở chính
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.IdQuocGiaCuaTruSoChinhNavigation.TenNuoc)
+            </dd>
+            <dt class = "col-sm-2">
+                Trạng thái CTĐT
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.IdTrangThaiCuaChuongTrinhNavigation.TrangThaiChuongTrinhDaoTao)
+            </dd>
+            <dt class = "col-sm-2">
+                Trình độ CTĐT
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.IdTrinhDoDaoTaoNavigation.TrinhDoDaoTao)
+            </dd>
+        </dl>
+    </div>
 </div>
-</div>
+
+<!-- Phần cuối gồm 2 button ở cuối trang -->
 <div class="combo-button">
     <a class="button-submit" asp-action="Edit" asp-route-id="@Model?.IdChuongTrinhDaoTao">CẬP NHẬT CTĐT</a> 
     <a class="button-back" asp-action="Index">QUAY LẠI DANH SÁCH</a>

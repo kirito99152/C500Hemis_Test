@@ -131,6 +131,21 @@
             font-size: 12px;
         }
 
+        /* Chỉnh hiệu ứng thông báo lỗi */
+        label.error {
+            color: red; /* Đổi màu chữ thành màu đỏ */
+            font-size: 1em;
+            font-weight: bold;
+            font-style: italic;
+            margin-top: 5px; /* Thêm khoảng cách phía trên cho thông báo lỗi */
+            display: block; /* Hiển thị thông báo trên dòng mới */
+        }
+
+        /* chỉnh hiệu ứng cho các trường nhập khi có lỗi */
+        input.error, select.error, textarea.error {
+            border: 1px solid red; /* Viền đỏ cho các trường có lỗi */
+            background-color: #ffe6e6; /* Màu nền nhạt để làm nổi bật */
+        }
     </style>
 }
 
@@ -141,9 +156,7 @@
             <!-- Phần tiêu đề -->
             <div class="tieude">
                 <h1>CẬP NHẬT CHƯƠNG TRÌNH ĐÀO TẠO</h1>
-                <hr />
-                @ViewBag.IdNganhDaoTao
-                <hr />
+                <hr /> <!---->             
                 <h4>Lưu ý: Nhật dữ liệu chính xác để cập nhật chương trình đào tạo hiện tại, nên nhập đầy đủ thông tin, không khuyến khích bỏ trống !!!</h4>
                 <hr />
             </div>
@@ -164,7 +177,7 @@
                 <select asp-for="IdNganhDaoTao" class="form-control" asp-items="ViewBag.IdNganhDaoTao"></select>
                 <span asp-validation-for="IdNganhDaoTao" class="text-danger"></span>
             </div>
-
+           
             <!-- Tên chương trình đào tạo -->
             <div class="form-group">
                 <label asp-for="TenChuongTrinh" class="control-label"></label>
@@ -244,7 +257,7 @@
 
             <!-- Thời gian đào tạo chuẩn -->
             <div class="form-group">
-                <label asp-for="ThoiGianDaoTaoChuan" class="control-label"></label>
+                <label asp-for="ThoiGianDaoTaoChuan" class="control-label">Thời gian đào tạo chuẩn (tháng)</label>
                 <input asp-for="ThoiGianDaoTaoChuan" class="form-control" />
                 <span asp-validation-for="ThoiGianDaoTaoChuan" class="text-danger"></span>
             </div>
@@ -328,44 +341,134 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
+    <!-- Code dùng để nhập dữ liệu tìm kiếm các thông tin trong box (do quá nhiều) -->
     <script>
+        // Lấy tất cả các phần tử `<select>` trong trang và lưu vào mảng `select`
         var select = document.querySelectorAll("select");
+        // Tạo một đối tượng `data` để lưu trữ thông tin các tùy chọn (options) của từng `<select>`
         var data = {};
+
+        // Vòng lặp qua từng `<select>` trong mảng `select`
         for (var i = 0; i < select.length; ++i) {
+            // Ẩn `<select>` đi để chỉ hiển thị trường tìm kiếm
             select[i].hidden = true;
+
+            // Tạo một đối tượng `cr` để lưu trữ các cặp giá trị (text - index) cho từng option
             let cr = {};
+            // Khởi tạo một ID duy nhất cho mỗi `datalist` dựa trên chỉ số `i`
             let idlist = "datalist" + i.toString();
+
+            // Tạo phần tử `<input>` để người dùng nhập tìm kiếm
             let input = document.createElement("input");
+            // Tạo phần tử `<datalist>` để chứa các tùy chọn (sẽ thay thế `<select>`)
             let datalist = document.createElement("datalist");
+
+            // Lấy tất cả các option từ `<select>` hiện tại
             let options = select[i].options;
+
+            // Tạo phần tử `<span>` để hiển thị thông báo xác thực nếu có lỗi nhập
             let validate = document.createElement("span");
+
+            // Thiết lập các thuộc tính và kiểu dáng cho `<input>`
             input.placeholder = "Nhập để tìm kiếm...";
             input.className = "form-control";
-            input.setAttribute("list", idlist);
-            input.setAttribute("selid", select[i].id);
+            input.setAttribute("list", idlist); // Liên kết `input` với `datalist` bằng ID
+            input.setAttribute("selid", select[i].id); // Lưu ID của `<select>` trong `input` để tiện xử lý
+
+            // Đặt giá trị mặc định cho `input` là tùy chọn được chọn hiện tại trong `<select>`
             input.value = select[i].options[select[i].selectedIndex].text;
+
+            // Thêm sự kiện `change` để xử lý khi người dùng thay đổi giá trị trong `input`
             input.addEventListener("change", function (e) {
+                // Lấy `selid` từ thuộc tính `selid` trong `input`
                 let selid = e.target.getAttribute("selid");
+                // Tìm phần tử `span` xác thực (validate) dựa trên `selid`
                 let validate = document.getElementById("Validate_" + selid);
+
+                // Kiểm tra xem giá trị nhập có nằm trong `data[selid]` hay không
                 if (typeof data[selid][e.target.value] !== 'undefined') {
+                    // Nếu có, cập nhật `<select>` để chọn đúng index tương ứng
                     document.getElementById(selid).selectedIndex = data[selid][e.target.value];
+                    // Xóa thông báo lỗi nếu hợp lệ
                     validate.innerHTML = "";
                 } else {
+                    // Nếu không hợp lệ, hiển thị thông báo lỗi
                     validate.innerHTML = validate.getAttribute("msg");
                 }
             });
+
+            // Vòng lặp qua từng tùy chọn trong `<select>` và thêm chúng vào `datalist`
             for (var j = 0; j < options.length; ++j) {
+                // Lưu trữ cặp giá trị (text - index) vào `cr` để tiện truy xuất
                 cr[options[j].text] = j;
+                // Tạo phần tử `<option>` cho `datalist`
                 let option = document.createElement("option");
-                option.value = options[j].text;
-                datalist.appendChild(option);
+                option.value = options[j].text; // Đặt giá trị của option là text của tùy chọn
+                datalist.appendChild(option); // Thêm option vào `datalist`
             }
+
+            // Thiết lập ID cho `datalist` và thêm nó vào `data` theo ID của `<select>`
             datalist.id = idlist;
             data[select[i].id] = cr;
+
+            // Thiết lập kiểu dáng và thuộc tính cho `validate`
             validate.className = "text-danger";
             validate.id = "Validate_" + select[i].id;
             validate.setAttribute("msg", "Không hợp lệ");
+
+            // Thêm `input`, `datalist`, và `validate` ngay sau phần tử `<select>` trong DOM
             select[i].after(input, datalist, validate);
         }
+    </script>
+
+    <!-- Code bắt lỗi, hiển thị thông báo lỗi -->
+    <script>
+        $("form").validate({
+
+            // Bắt lỗi
+            rules: {
+
+                MaChuongTrinhDaoTao: {
+                    maxlength: 50, // giới hạn kí tự là 50
+                },
+
+                TenChuongTrinh: {
+                    required: true, // lỗi bỏ trống
+                    maxlength: 50, // giới hạn kí tự là 50
+                },
+
+                TenChuongTrinhBangTiengAnh: {
+                    required: true, // lỗi bỏ trống
+                    maxlength: 50, // giới hạn kí tự là 50
+                }
+            },
+
+            // Thông báo lỗi
+            messages: {
+
+                MaChuongTrinhDaoTao: {
+                    maxlength: "Mã chương trình đào tạo quá dài, mời bạn kiểm tra lại! (Không nên nhập quá {0} kí tự)",
+                },
+
+                TenChuongTrinh: {
+                    required: "Một chương trình đào tạo phải có tên, xin đừng bỏ trống hoặc xóa thông tin này!",
+                    maxlength: "Tên chương trình đào tạo quá dài, xin hãy kiểm tra lại hoặc viết tắt! (Dưới 50 kí tự)"
+                },
+
+                TenChuongTrinhBangTiengAnh: {
+                    required: "Một chương trình đào tạo phải có tên, xin đừng bỏ trống hoặc xóa thông tin này!",
+                    maxlength: "Tên chương trình đào tạo quá dài, xin hãy kiểm tra lại hoặc viết tắt! (Dưới 50 kí tự)"
+                }
+            }
+        });
+    </script>
+
+    <!-- Một thông báo nhỏ -->
+    <script>
+        document.querySelector('.button-submit').addEventListener('click', function (event) {
+            if (!confirm('Mời bạn kiểm tra kĩ lưỡng thông tin đã cập nhật, tránh nhầm lẫn sai sót. Chúc bạn một ngày tốt lành. Bấm xác nhận nếu bạn đã xong!!! (Nếu không quay về trang chính, hãy sửa lỗi theo yêu cầu)')) {
+                event.preventDefault();
+            }
+        });
     </script>
 }
