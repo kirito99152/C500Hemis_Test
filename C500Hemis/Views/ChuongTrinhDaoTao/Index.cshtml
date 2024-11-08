@@ -3,231 +3,279 @@
 @{
     ViewData["Title"] = "DANH SÁCH CTĐT";
 }
+
 @section Heads{
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Liên kết thư viện CSS của DataTable -->
     <link href="https://cdn.datatables.net/v/dt/jq-3.7.0/dt-2.1.7/r-3.0.3/datatables.min.css" rel="stylesheet">
-}
+   }
+
 @section Styles {
     <style>
-        .table {
-            border-collapse: collapse;
+
+        /* Tiêu đề: DANH SÁCH CÁC CHƯƠNG TRÌNH ĐÀO TẠO */
+        h1{ 
+            font-weight: bold;
+        }
+         
+        /* Định dạng chung cho table */
+        table {           
+            /* 
+                 - Mặc định nền sẽ là trong suốt vì thế nên đặt nền màu trắng,            
+                   để không bị ảnh hưởng bởi màu nền, ảnh nền,... nằm dưới layout table sau này (nếu có).
+                 - Đặt OVERFLOW:HIDDEN để không hiển thị các hiệu ứng thừa TRÀN RA KHỎI KHUNG HÌNH,
+                   để boder-radius hoạt động, nếu không có ...hidden... thì sẽ không hiển thị hiệu ứng BODER-RADIUS.
+            */
+            border-collapse: collapse; /* COLLAPSE: bỏ viền cho table */
+            background-color: white; 
+            overflow: hidden; 
             margin: 20px 0;
-            font-size:0.9em;
-            min-width: 400px;
-            border-radius: 10px 10px 0 0;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+            font-size: 0.9em;  /* 1em=16px */           
+            border-radius: 10px 10px 0 0; /* hai góc trên */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* đổ bóng */
             width: 100%;
         }
 
-                 /* Đặt kích thước cột theo phần trăm */
-                th:nth-child(1), td:nth-child(1) { width: 15%; } /* Cột Tên CTĐT */
-                th:nth-child(2), td:nth-child(2) { width: 15%; } /* Cột Ngành ĐT */
-                th:nth-child(3), td:nth-child(3) { width: 14%; } /* Cột Trạng thái CTĐT */
-                th:nth-child(4), td:nth-child(4) { width: 14%; } /* Cột Hình thức CTĐT */
-                th:nth-child(5), td:nth-child(5) { width: 14%; } /* Cột Trình độ CTĐT */
-                th:nth-child(6), td:nth-child(6) { width: 14%; } /* Cột Học chế CTĐT */
-                th:nth-child(7), td:nth-child(7) { width: 14%; } /* Cột nút sửa, xóa */
-        
-        .table thead tr {
-            background-color: #009879;
-            color: #ffffff;
-            text-align: left;
-            font-weight: bold;
-            border-bottom: 2px solid #dddddd;
-        }
+                /* Đặt kích thước từng cột theo phần trăm */
+                th:nth-child(1), td:nth-child(1) { width:  4%; } /* Cột số thứ tự        */
+                th:nth-child(2), td:nth-child(2) { width: 15%; } /* Cột Tên CTĐT         */
+                th:nth-child(3), td:nth-child(3) { width: 15%; } /* Cột Ngành ĐT         */
+                th:nth-child(4), td:nth-child(4) { width: 14%; } /* Cột Trạng thái CTĐT  */
+                th:nth-child(5), td:nth-child(5) { width: 14%; } /* Cột Hình thức CTĐT   */
+                th:nth-child(6), td:nth-child(6) { width: 14%; } /* Cột Trình độ CTĐT    */
+                th:nth-child(7), td:nth-child(7) { width: 12%; } /* Cột Học chế CTĐT     */
+                th:nth-child(8), td:nth-child(8) { width: 12%; } /* Cột nút sửa, xóa     */
 
-        .table th, .table td {
-            padding: 12px 15px;
-        }
+                /* PHẦN 1: Hiển thị tên cột (STT, tên, trạng thái,...) */
+                table thead tr {
+                    /*
+                        Đặt nền màu xanh đậm 
+                        Chữ màu trắng, căn lề trái và in đậm
+                    */
+                    background-color: #009879; /* Màu xanh đậm */
+                    color: #ffffff; 
+                    text-align: left; 
+                    font-weight: bold; 
+                }
 
-        .table tbody tr {
-            border-bottom: 2px solid #dddddd;
-        }
+                /* Nội dung hiển thị trong table cách lề 20px */
+                table th, .table td {
+                    padding: 12px;
+                }
 
-        .table tbody tr:nth-of-type(even){
-            background-color: #f3f3f3;
-        }
+                /* Định dạng các phần tử tr chẵn */
+                table tbody tr:nth-of-type(even){
+                    /* 
+                         Các phần tử tr chẵn (even) thì có màu nền khác với phần tử tr lẻ (odd)
+                         Xem thêm thông tin chi tiết https://www.w3schools.com/cssref/sel_nth-of-type.php
+                    */
+                    background-color: #f3f3f3; /* Màu xám */
+                }
 
-        .table tbody tr:last-of-type {
-            border-bottom: 5px solid #009879;
-        }
+                /* Định dạng phần tử tr cuối cùng của table */
+                table tbody tr:last-of-type {
+                    border-bottom: 8px solid #009879; /* Viền dưới màu xanh đậm, trùng màu tiêu đề */
+                }
 
-        .table tbody tr:hover{
-            background-color: #62cdb7;
-            color: #ffffff;
-            font-style: italic;
-        }
+                /* Hiệu ứng khi di chuột đến các phần tử tr trong table */
+                table tbody tr:hover{
+                    /* 
+                        Chuyển màu nền thành xanh nhạt 
+                        Chuyển màu chữ thành màu trắng, in đậm và in nghiêng
+                    */
+                    background-color: #62cdb7; 
+                    color: #ffffff; 
+                    font-style: italic;
+                    font-weight: bold;
+                }
 
-        .button_a_edit, .button_a_del {
-            border-style: solid;
-            border-width: 0.5px;
-            font-size: 0.9em;
+        /* Định dạng cho 3 button Thêm, sửa, xóa */
+        .button_a_edit, .button_a_del, .button-create {
+            border-style: solid; /* viền dày liền mạch */
+            border-width: 0.5px; /* Độ dày viền */
+            font-size: 0.9em; 
             display: inline-block;
             padding: 4px 8px;
-            text-decoration: none;
-            color: black;
+            text-decoration: none; /* Xóa đường gạch chân bên dưới link */
+            color: black; 
             border-radius: 5px;
-            font-weight: bold;
-            text-align: center;
-            transition: transform 0.3s ease, background-color 0.3s ease; /* Hiệu ứng chuyển màu khi di chuột */
-            margin: 2px; /* Khoảng cách giữa các nút */
+            font-weight: bold; 
+            text-align: center; 
+            transition: transform 0.3s ease, background-color 0.3s ease; /* Thời gian hiệu ứng chuyển màu khi di chuột */
+            margin: 2px; 
         }
 
-            /* Khi di chuột vào nút "SỬA" */
-            .button_a_edit:hover {
-                background-color: #007bff; /*màu xanh dương*/
-                color: white;
-            }
+                /* Khi di chuột vào button "SỬA" */
+                .button_a_edit:hover {
+                    background-color: #007bff; /*màu xanh dương*/
+                    color: white;
+                    font-weight: bold;
+                    font-style: italic;
+                }
 
-            /* Khi di chuột vào nút "XÓA" */
-            .button_a_del:hover {
-                background-color: #dc3545; /* Màu đỏ */
-                color: white;
-            }
+                /* Khi di chuột vào button "XÓA" */
+                .button_a_del:hover {
+                    background-color: #dc3545; /* Màu đỏ */
+                    color: white;
+                    font-weight: bold;
+                    font-style: italic;
+                }
+            
+                /* Khi chi chuột vào button "ĐĂNG KÍ CTĐT" */
+                .button-create:hover{
+                    background-color: #009879; /* màu xanh đâm, trùng màu cột tiêu đề */
+                    color: white;
+                    font-weight: bold;
+                    font-style: italic;
+                }
 
-            /* Đặt kiểu bố cục cho khối chứa các nút */
-            .edit_del {
-                width: 100%;
-                display: flex;
-                justify-content: center; /* Canh giữa các nút trong div */
-                align-items: center;
-            }
-    </style>
-    
+                /* Định dạng cho khối chứa hai nút sửa, xóa */
+                .edit_del {
+                    width: 100%;
+                    display: flex; /* Các khối con nằm trên hàng ngang */
+                    justify-content: center; /* Căn giữa trục y */
+                    align-items: center; /* Căn giữa trục x */
+                }
+    </style> 
 }
 
-
 <h1 style="text-align: center">DANH SÁCH CÁC CHƯƠNG TRÌNH ĐÀO TẠO</h1>
-  
 
-
-<table class="table" id="view_table">
+<table>
+    <!-- PHẦN 1: HIỂN THỊ TÊN CỘT -->
     <thead>
         <tr>
+            <!-- Cột 1:Số thứ tự -->
+            <th> STT </th>
 
-            <!-- Cột 1: Tên chương trình đào tạo -->
-            <th>
-                TÊN CTĐT
-            </th>
+            <!-- Cột 2: Tên chương trình đào tạo -->
+            <th> TÊN CTĐT </th>
                 
+            <!-- Cột 3: Ngành đào tạo -->
+            <th> MÃ NGÀNH </th>
 
-            <!-- Cột 2: Ngành đào tạo -->
-            <th>
-                MÃ NGÀNH
-            </th>
+            <!-- Cột 4: Trạng thái chương trình đào tạo -->
+            <th> TRẠNG THÁI </th>
 
+            <!-- Cột 5: Loại chương trình đào tạo -->
+            <th> HÌNH THỨC </th>
 
-            <!-- Cột 3: Trạng thái chương trình đào tạo -->
-            <th>
-                TRẠNG THÁI
-            </th>
+            <!-- Cột 6: Trình độ Chương trình đào tạo -->
+            <th> TRÌNH ĐỘ </th>
 
-
-            <!-- Cột 4: Loại chương trình đào tạo -->
-            <th>
-                HÌNH THỨC
-            </th>
-
-
-            <!-- Cột 5: Trình độ Chương trình đào tạo -->
-            <th>
-                TRÌNH ĐỘ
-            </th>
-
-
-            <!-- Cột 6: Học chế CTĐT -->
-            <th>
-                HỌC CHẾ
-            </th>
+            <!-- Cột 7: Học chế CTĐT -->
+            <th> HỌC CHẾ </th>
             
-
-            <!-- Cột 7: Các nút sửa, xóa -->
+            <!-- Cột 8: Các nút sửa, xóa -->
             <th></th>
         </tr>
     </thead>
+
+    <!-- PHẦN 2: HIỂN THỊ NỘI DUNG -->
     <tbody>
+        @{
+            int stt = 0; // khai báo biến stt để hiện cột số thứ tự.
+        }
       
         @foreach (var item in Model)
-        {
+        { 
+            stt++;
 
-            <tr cursor: pointer;"
-                    onclick="window.location.href='@Url.Action("Details", new { id = item.IdChuongTrinhDaoTao})'">
-               
-                <!-- Cột 1: Tên chương trình đào tạo -->
+            <!-- Click chuột vào table để dẫn đến trang Details thay cho button "Details" (Chi tiết) -->
+            <tr cursor: pointer;" 
+                onclick="window.location.href='@Url.Action("Details", new { id = item.IdChuongTrinhDaoTao})'">
+                                  
+               <!-- Cột 1: hiển thị số thứ tự -->     
+               <td style="text-align: left"> 
+                   @stt
+               </td>
+
+                <!-- Cột 2: Tên chương trình đào tạo -->
                 <td>
                     @Html.DisplayFor(modelItem => item.TenChuongTrinh) <br />
                     @Html.DisplayFor(modelItem => item.TenChuongTrinhBangTiengAnh)
                 </td>
                 
-
-                <!-- Cột 2: Ngành đào tạo -->
+                <!-- Cột 3: Ngành đào tạo -->
                 <td>               
                     @Html.DisplayFor(modelItem => item.IdNganhDaoTaoNavigation.NganhDaoTao) <br />
                     (@Html.DisplayFor(modelItem => item.IdNganhDaoTao))
                 </td>
 
-
-                <!-- Cột 3: Trạng thái chương trình đào tạo -->
+                <!-- Cột 4: Trạng thái chương trình đào tạo -->
                 <td>
                     @Html.DisplayFor(modelItem => item.IdTrangThaiCuaChuongTrinhNavigation.TrangThaiChuongTrinhDaoTao)
                 </td>
 
-
-                <!-- Cột 4: Loại chương trình đào tạo -->
+                <!-- Cột 5: Loại chương trình đào tạo -->
                 <td>
                     @Html.DisplayFor(modelItem => item.IdLoaiChuongTrinhDaoTaoNavigation.LoaiChuongTrinhDaoTao)
                 </td>
 
-
-                <!-- Cột 5: Trình độ Chương trình đào tạo -->
+                <!-- Cột 6: Trình độ chương trình đào tạo -->
                 <td>
                     @Html.DisplayFor(modelItem => item.IdTrinhDoDaoTaoNavigation.TrinhDoDaoTao)
                 </td>
 
-
-                <!-- Cột 6: Học chế CTĐT -->
+                <!-- Cột 7: Học chế chương trinh đào tạo -->
                 <td>
                     @Html.DisplayFor(modelItem => item.IdHocCheDaoTaoNavigation.HocCheDaoTao)
                 </td>
 
-
-                <!-- Cột 7: Các nút sửa, xóa -->
+                <!-- Cột 8: Các nút sửa, xóa -->
                 <td>
                     <div class="edit_del"> 
-                        <a class="button_a_edit" asp-action="Edit" asp-route-id="@item.IdChuongTrinhDaoTao"><i class="fa fa-pencil"> SỬA </i></a>
-                        <a class="button_a_del" asp-action="Delete" asp-route-id="@item.IdChuongTrinhDaoTao"><i class="fa fa-trash"> XÓA </i></a>
+                        <a class="button_a_edit" asp-action="Edit" asp-route-id="@item.IdChuongTrinhDaoTao">SỬA</a>
+                        <a class="button_a_del" asp-action="Delete" asp-route-id="@item.IdChuongTrinhDaoTao">XÓA</a>
                     </div>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
 @section Scripts {
+    <!-- Liên kết với các thư viện DataTable bên ngoài -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-2.1.8/b-3.1.2/b-colvis-3.1.2/b-html5-3.1.2/b-print-3.1.2/r-3.0.3/datatables.min.js"></script>
+    
+    <!-- 
+        Điều chỉnh hiển thị thanh tìm kiếm, sắp xếp, hiện số trang cho table  
+        Datatable trong datatable.net. Tìm hiểu thêm thông tin: https://datatables.net/manual/ 
+    -->
     <script>
-        //Datatable trong datatable.net. Tìm hiểu thêm thông tin: https://datatables.net/manual/
-        var table = new DataTable("#view_table", {
+        // Khởi tạo Object (đối tượng) có tên "DataTable" cho <table> 
+        var table = new DataTable("table", {
+
+            // Cấu hình hiển thị đa thiết bị, tùy theo kích thước màn hình
+            // Tìm hiểu thêm thông tin, cách sử dụng về Responsive Web Design https://www.w3schools.com/css/css_rwd_intro.asp
             responsive: {
-                details: false
+                details: false // tắt tính năng hiển thị các chi tiết bổ sung cho màn hình nhỏ
             },
+
+            // Cấu hình ngôn ngữ tiếng Việt cho DataTable 
             language: {
-                //Điều chỉnh phần hiển thị label của thanh tìm kiếm - Xem thêm thông tin: https://datatables.net/reference/option/language.search
+                // Điều chỉnh phần hiển thị label của thanh tìm kiếm thành tiếng Việt
+                // Xem thêm thông tin: https://datatables.net/reference/option/language.search
                 search: "Tìm kiếm",
-                //Điều chỉnh phần hiển thị thông tin của table - Xem thêm thông tin: https://datatables.net/reference/option/language.info
+                // Điều chỉnh phần hiển thị thông tin của table, nằm dưới table, phía cuối trang web
+                // Xem thêm thông tin: https://datatables.net/reference/option/language.info
                 info: "Tổng cộng có: _TOTAL_ Chương trình đào tạo",
             },
-            createdRow: (row, data, index) => {
-            },
-            layout: {//Layout: https://datatables.net/examples/layout/index.html
-                topStart: {
-                    buttons: [//extension buttons: https://datatables.net/extensions/buttons/config
+
+
+            // Cấu hình bố cục cho DataTable, điều chỉnh cách sắp xếp của các trường thông tin
+            // Xem thêm thông tin về Layout: https://datatables.net/examples/layout/index.html
+            layout: {
+                // Thêm các nút chức năng (buttons) ở phía trên đầu của table
+                topStart: { 
+                    buttons: [ // Xem thêm thông tin về extension buttons: https://datatables.net/extensions/buttons/config
                         {
-                            className: 'btn btn-primary', //Thêm class cho button
-                            text: 'THÊM CHƯƠNG TRÌNH ĐÀO TẠO',
-                            action: function (e, dt, node, config) {//Hành động của button
+                            className: 'button-create', // Đặt class cho button "Đăng kí CTĐT"
+                            text: 'ĐĂNG KÍ CHƯƠNG TRÌNH ĐÀO TẠO MỚI !!!',
+                            action: function (e, dt, node, config) {
+                                // Hành động (action) sau khi click vào button
+                                // chuyển hướng (window.location.href) người dùng đến URL của trang Create thông qua hàm Url.Action
                                 window.location.href = '@Url.Action("Create")';
                             }
                         }
@@ -235,6 +283,8 @@
                 }
             }
         });
+
+
         //HTMLDOM Element: https://developer.mozilla.org/en-US/docs/Web/API/Element
         //Datatables API: https://datatables.net/reference/api/table().header()
         var row = table.table().header().lastElementChild;
