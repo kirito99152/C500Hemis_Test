@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebAPI.Models
 {
+    [Table("TbNguoi")]
     public class human
     {
+        [Key]
         [DisplayName("Id Người")]
         [Required(ErrorMessage = "Không được bỏ trống ô này!")]
         public int IdNguoi { get; set; }

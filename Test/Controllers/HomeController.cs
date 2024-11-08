@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Diagnostics;
+using System.Text.Json;
 using Test.Models;
 
 namespace Test.Controllers
@@ -13,21 +14,24 @@ namespace Test.Controllers
         {
             _logger = logger;
         }
-        public async Task<IActionResult> Index()
+        private async Task<string> send(string url)
         {
             HttpClient HttpClient = new HttpClient()
             {
                 BaseAddress = new Uri(@"http://localhost:5225"),
             };
-            HttpClient.DefaultRequestHeaders.Clear();
+            HttpClient.DefaultRequestHeaders.Accept.Clear();
             HttpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-            HttpResponseMessage httpResponse = await HttpClient.GetAsync("/api/CaNhan/Hoten");
+            HttpResponseMessage httpResponse = await HttpClient.GetAsync(url);
             if (httpResponse.IsSuccessStatusCode)
             {
                 string raw_data = await httpResponse.Content.ReadAsStringAsync();
-                //string data = 
-                return Content(await httpResponse.Content.ReadAsStringAsync());
+                return raw_data;
             }
+            return "";
+        }
+        public async Task<IActionResult> Index()
+        {
             return View();
         }
 
