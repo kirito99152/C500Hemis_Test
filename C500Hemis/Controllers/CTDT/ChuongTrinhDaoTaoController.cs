@@ -6,17 +6,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using C500Hemis.Models;
-
+using C500Hemis.API;
+using C500Hemis.Models.DM;
 namespace C500Hemis.Controllers.CTDT
 {
     public class ChuongTrinhDaoTaoController : Controller
     {
-        private readonly HemisContext _context;
-
+        private readonly ApiServices ApiServices_;
         // Lấy từ HemisContext 
-        public ChuongTrinhDaoTaoController(HemisContext context)
+        public ChuongTrinhDaoTaoController(ApiServices services)
         {
-            _context = context;
+            ApiServices_ = services;
         }
 
         // GET: ChuongTrinhDaoTao
@@ -24,17 +24,9 @@ namespace C500Hemis.Controllers.CTDT
         public async Task<IActionResult> Index() 
         {
             try {
-                var hemisContext = _context.TbChuongTrinhDaoTaos 
+                List<TbChuongTrinhDaoTao> getall = await ApiServices_.GetAll<TbChuongTrinhDaoTao>("/api/ctdt/ChuongTrinhDaoTao"); 
                 // Lấy data từ các table khác có liên quan (khóa ngoài) để hiển thị trên Index
-                .Include(t => t.IdDonViCapBangNavigation)
-                .Include(t => t.IdHocCheDaoTaoNavigation)
-                .Include(t => t.IdLoaiChuongTrinhDaoTaoNavigation)
-                .Include(t => t.IdLoaiChuongTrinhLienKetDaoTaoNavigation)
-                .Include(t => t.IdNganhDaoTaoNavigation)
-                .Include(t => t.IdQuocGiaCuaTruSoChinhNavigation)
-                .Include(t => t.IdTrangThaiCuaChuongTrinhNavigation)
-                .Include(t => t.IdTrinhDoDaoTaoNavigation);
-                return View(await hemisContext.ToListAsync()); 
+                return View(getall); 
                 
             // Bắt lỗi các trường hợp ngoại lệ
             } catch ( Exception ex ) 
@@ -55,17 +47,8 @@ namespace C500Hemis.Controllers.CTDT
                 }
 
                 // Tìm các dữ liệu theo Id tương ứng đã truyền vào view Details
-                var tbChuongTrinhDaoTao = await _context.TbChuongTrinhDaoTaos
-                    .Include(t => t.IdDonViCapBangNavigation)
-                    .Include(t => t.IdHocCheDaoTaoNavigation)
-                    .Include(t => t.IdLoaiChuongTrinhDaoTaoNavigation)
-                    .Include(t => t.IdLoaiChuongTrinhLienKetDaoTaoNavigation)
-                    .Include(t => t.IdNganhDaoTaoNavigation)
-                    .Include(t => t.IdQuocGiaCuaTruSoChinhNavigation)
-                    .Include(t => t.IdTrangThaiCuaChuongTrinhNavigation)
-                    .Include(t => t.IdTrinhDoDaoTaoNavigation)
-                    .FirstOrDefaultAsync(m => m.IdChuongTrinhDaoTao == id);
-                
+                var tbChuongTrinhDaoTaos = await ApiServices_.GetAll<TbChuongTrinhDaoTao>("/api/ctdt/ChuongTrinhDaoTao");
+                var tbChuongTrinhDaoTao = tbChuongTrinhDaoTaos.FirstOrDefault(m => m.IdChuongTrinhDaoTao == id);
                 // Nếu không tìm thấy Id tương ứng, chương trình sẽ báo lỗi NotFound
                 if (tbChuongTrinhDaoTao == null)
                 {
@@ -84,17 +67,17 @@ namespace C500Hemis.Controllers.CTDT
         // GET: ChuongTrinhDaoTao/Create
         // Hiển thị view Create để tạo một bản ghi CTĐT mới
         // Truyền data từ các table khác hiển thị tại view Create (khóa ngoài)
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             try {
-                ViewData["IdDonViCapBang"] = new SelectList(_context.DmDonViCapBangs, "IdDonViCapBang", "DonViCapBang");
-                ViewData["IdHocCheDaoTao"] = new SelectList(_context.DmHocCheDaoTaos, "IdHocCheDaoTao", "HocCheDaoTao");
-                ViewData["IdLoaiChuongTrinhDaoTao"] = new SelectList(_context.DmLoaiChuongTrinhDaoTaos, "IdLoaiChuongTrinhDaoTao", "LoaiChuongTrinhDaoTao");
-                ViewData["IdLoaiChuongTrinhLienKetDaoTao"] = new SelectList(_context.DmLoaiChuongTrinhLienKetDaoTaos, "IdLoaiChuongTrinhLienKetDaoTao", "LoaiChuongTrinhLienKetDaoTao");
-                ViewData["IdNganhDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao");
-                ViewData["IdQuocGiaCuaTruSoChinh"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "TenNuoc");
-                ViewData["IdTrangThaiCuaChuongTrinh"] = new SelectList(_context.DmTrangThaiChuongTrinhDaoTaos, "IdTrangThaiChuongTrinhDaoTao", "TrangThaiChuongTrinhDaoTao");
-                ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "TrinhDoDaoTao");
+                ViewData["IdDonViCapBang"] = new SelectList(await ApiServices_.GetAll<DmDonViCapBang>("/api/dm/DonViCapBang"), "IdDonViCapBang", "DonViCapBang");
+                ViewData["IdHocCheDaoTao"] = new SelectList(await ApiServices_.GetAll<DmHocCheDaoTao>("/api/dm/HocCheDaoTao"), "IdHocCheDaoTao", "HocCheDaoTao");
+                ViewData["IdLoaiChuongTrinhDaoTao"] = new SelectList(await ApiServices_.GetAll<DmLoaiChuongTrinhDaoTao>("/api/dm/LoaiChuongTrinhDaoTao"), "IdLoaiChuongTrinhDaoTao", "LoaiChuongTrinhDaoTao");
+                ViewData["IdLoaiChuongTrinhLienKetDaoTao"] = new SelectList(await ApiServices_.GetAll<DmLoaiChuongTrinhLienKetDaoTao>("/api/dm/LoaiChuongTrinhLienKetDaoTao"), "IdLoaiChuongTrinhLienKetDaoTao", "LoaiChuongTrinhLienKetDaoTao");
+                ViewData["IdNganhDaoTao"] = new SelectList(await ApiServices_.GetAll<DmNganhDaoTao>("/api/dm/NganhDaoTao"), "IdNganhDaoTao", "NganhDaoTao");
+                ViewData["IdQuocGiaCuaTruSoChinh"] = new SelectList(await ApiServices_.GetAll<DmQuocTich>("/api/dm/QuocTich"), "IdQuocTich", "TenNuoc");
+                ViewData["IdTrangThaiCuaChuongTrinh"] = new SelectList(await ApiServices_.GetAll<DmTrangThaiChuongTrinhDaoTao>("/api/dm/TrangThaiChuongTrinhDaoTao"), "IdTrangThaiChuongTrinhDaoTao", "TrangThaiChuongTrinhDaoTao");
+                ViewData["IdTrinhDoDaoTao"] = new SelectList(await ApiServices_.GetAll<DmTrinhDoDaoTao>("/api/dm/TrinhDoDaoTao"), "IdTrinhDoDaoTao", "TrinhDoDaoTao");
                 return View();
             }
             catch (Exception ex)
@@ -117,24 +100,20 @@ namespace C500Hemis.Controllers.CTDT
         {
             try {
                 // Nếu trùng IDChuongTrinhDaoTao sẽ báo lỗi
-                if (TbChuongTrinhDaoTaoExists(tbChuongTrinhDaoTao.IdChuongTrinhDaoTao)) ModelState.AddModelError("IdChuongTrinhDaoTao", "ID này đã tồn tại!");
-                
-               
-
+                if (await TbChuongTrinhDaoTaoExists(tbChuongTrinhDaoTao.IdChuongTrinhDaoTao)) ModelState.AddModelError("IdChuongTrinhDaoTao", "ID này đã tồn tại!");
                 if (ModelState.IsValid)
                 {
-                    _context.Add(tbChuongTrinhDaoTao);
-                    await _context.SaveChangesAsync();
+                    await ApiServices_.Create<TbChuongTrinhDaoTao>("/api/ctdt/ChuongTrinhDaoTao", tbChuongTrinhDaoTao);
                     return RedirectToAction(nameof(Index));
                 }
-                ViewData["IdDonViCapBang"] = new SelectList(_context.DmDonViCapBangs, "IdDonViCapBang", "IdDonViCapBang", tbChuongTrinhDaoTao.IdDonViCapBang);
-                ViewData["IdHocCheDaoTao"] = new SelectList(_context.DmHocCheDaoTaos, "IdHocCheDaoTao", "IdHocCheDaoTao", tbChuongTrinhDaoTao.IdHocCheDaoTao);
-                ViewData["IdLoaiChuongTrinhDaoTao"] = new SelectList(_context.DmLoaiChuongTrinhDaoTaos, "IdLoaiChuongTrinhDaoTao", "IdLoaiChuongTrinhDaoTao", tbChuongTrinhDaoTao.IdLoaiChuongTrinhDaoTao);
-                ViewData["IdLoaiChuongTrinhLienKetDaoTao"] = new SelectList(_context.DmLoaiChuongTrinhLienKetDaoTaos, "IdLoaiChuongTrinhLienKetDaoTao", "IdLoaiChuongTrinhLienKetDaoTao", tbChuongTrinhDaoTao.IdLoaiChuongTrinhLienKetDaoTao);
-                ViewData["IdNganhDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "IdNganhDaoTao", tbChuongTrinhDaoTao.IdNganhDaoTao);
-                ViewData["IdQuocGiaCuaTruSoChinh"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "IdQuocTich", tbChuongTrinhDaoTao.IdQuocGiaCuaTruSoChinh);
-                ViewData["IdTrangThaiCuaChuongTrinh"] = new SelectList(_context.DmTrangThaiChuongTrinhDaoTaos, "IdTrangThaiChuongTrinhDaoTao", "IdTrangThaiChuongTrinhDaoTao", tbChuongTrinhDaoTao.IdTrangThaiCuaChuongTrinh);
-                ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "IdTrinhDoDaoTao", tbChuongTrinhDaoTao.IdTrinhDoDaoTao);
+                ViewData["IdDonViCapBang"] = new SelectList(await ApiServices_.GetAll<DmDonViCapBang>("/api/dm/DonViCapBang"), "IdDonViCapBang", "DonViCapBang", tbChuongTrinhDaoTao.IdDonViCapBang);
+                ViewData["IdHocCheDaoTao"] = new SelectList(await ApiServices_.GetAll<DmHocCheDaoTao>("/api/dm/HocCheDaoTao"), "IdHocCheDaoTao", "HocCheDaoTao", tbChuongTrinhDaoTao.IdHocCheDaoTao);
+                ViewData["IdLoaiChuongTrinhDaoTao"] = new SelectList(await ApiServices_.GetAll<DmLoaiChuongTrinhDaoTao>("/api/dm/LoaiChuongTrinhDaoTao"), "IdLoaiChuongTrinhDaoTao", "LoaiChuongTrinhDaoTao", tbChuongTrinhDaoTao.IdLoaiChuongTrinhDaoTao);
+                ViewData["IdLoaiChuongTrinhLienKetDaoTao"] = new SelectList(await ApiServices_.GetAll<DmLoaiChuongTrinhLienKetDaoTao>("/api/dm/LoaiChuongTrinhLienKetDaoTao"), "IdLoaiChuongTrinhLienKetDaoTao", "LoaiChuongTrinhLienKetDaoTao", tbChuongTrinhDaoTao.IdLoaiChuongTrinhDaoTao);
+                ViewData["IdNganhDaoTao"] = new SelectList(await ApiServices_.GetAll<DmNganhDaoTao>("/api/dm/NganhDaoTao"), "IdNganhDaoTao", "NganhDaoTao", tbChuongTrinhDaoTao.IdNganhDaoTao);
+                ViewData["IdQuocGiaCuaTruSoChinh"] = new SelectList(await ApiServices_.GetAll<DmQuocTich>("/api/dm/QuocTich"), "IdQuocTich", "TenNuoc", tbChuongTrinhDaoTao.IdQuocGiaCuaTruSoChinh);
+                ViewData["IdTrangThaiCuaChuongTrinh"] = new SelectList(await ApiServices_.GetAll<DmTrangThaiChuongTrinhDaoTao>("/api/dm/TrangThaiChuongTrinhDaoTao"), "IdTrangThaiChuongTrinhDaoTao", "TrangThaiChuongTrinhDaoTao", tbChuongTrinhDaoTao.IdTrangThaiCuaChuongTrinh);
+                ViewData["IdTrinhDoDaoTao"] = new SelectList(await ApiServices_.GetAll<DmTrinhDoDaoTao>("/api/dm/TrinhDoDaoTao"), "IdTrinhDoDaoTao", "TrinhDoDaoTao", tbChuongTrinhDaoTao.IdTrinhDoDaoTao);
                 return View(tbChuongTrinhDaoTao);
             }
             catch (Exception ex)
@@ -156,19 +135,19 @@ namespace C500Hemis.Controllers.CTDT
                     return NotFound();
                 }
 
-                var tbChuongTrinhDaoTao = await _context.TbChuongTrinhDaoTaos.FindAsync(id);
+                var tbChuongTrinhDaoTao = await ApiServices_.GetId<TbChuongTrinhDaoTao>("/api/ctdt/ChuongTrinhDaoTao", id ?? 0);
                 if (tbChuongTrinhDaoTao == null)
                 {
                     return NotFound();
                 }
-                ViewData["IdDonViCapBang"] = new SelectList(_context.DmDonViCapBangs, "IdDonViCapBang", "DonViCapBang", tbChuongTrinhDaoTao.IdDonViCapBang);
-                ViewData["IdHocCheDaoTao"] = new SelectList(_context.DmHocCheDaoTaos, "IdHocCheDaoTao", "HocCheDaoTao", tbChuongTrinhDaoTao.IdHocCheDaoTao);
-                ViewData["IdLoaiChuongTrinhDaoTao"] = new SelectList(_context.DmLoaiChuongTrinhDaoTaos, "IdLoaiChuongTrinhDaoTao", "LoaiChuongTrinhDaoTao", tbChuongTrinhDaoTao.IdLoaiChuongTrinhDaoTao);
-                ViewData["IdLoaiChuongTrinhLienKetDaoTao"] = new SelectList(_context.DmLoaiChuongTrinhLienKetDaoTaos, "IdLoaiChuongTrinhLienKetDaoTao", "LoaiChuongTrinhLienKetDaoTao", tbChuongTrinhDaoTao.IdLoaiChuongTrinhLienKetDaoTao);
-                ViewData["IdNganhDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "NganhDaoTao", tbChuongTrinhDaoTao.IdNganhDaoTao);
-                ViewData["IdQuocGiaCuaTruSoChinh"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "TenNuoc", tbChuongTrinhDaoTao.IdQuocGiaCuaTruSoChinh);
-                ViewData["IdTrangThaiCuaChuongTrinh"] = new SelectList(_context.DmTrangThaiChuongTrinhDaoTaos, "IdTrangThaiChuongTrinhDaoTao", "TrangThaiChuongTrinhDaoTao", tbChuongTrinhDaoTao.IdTrangThaiCuaChuongTrinh);
-                ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "TrinhDoDaoTao", tbChuongTrinhDaoTao.IdTrinhDoDaoTao);
+                ViewData["IdDonViCapBang"] = new SelectList(await ApiServices_.GetAll<DmDonViCapBang>("/api/dm/DonViCapBang"), "IdDonViCapBang", "DonViCapBang", tbChuongTrinhDaoTao.IdDonViCapBang);
+                ViewData["IdHocCheDaoTao"] = new SelectList(await ApiServices_.GetAll<DmHocCheDaoTao>("/api/dm/HocCheDaoTao"), "IdHocCheDaoTao", "HocCheDaoTao", tbChuongTrinhDaoTao.IdHocCheDaoTao);
+                ViewData["IdLoaiChuongTrinhDaoTao"] = new SelectList(await ApiServices_.GetAll<DmLoaiChuongTrinhDaoTao>("/api/dm/LoaiChuongTrinhDaoTao"), "IdLoaiChuongTrinhDaoTao", "LoaiChuongTrinhDaoTao", tbChuongTrinhDaoTao.IdLoaiChuongTrinhDaoTao);
+                ViewData["IdLoaiChuongTrinhLienKetDaoTao"] = new SelectList(await ApiServices_.GetAll<DmLoaiChuongTrinhLienKetDaoTao>("/api/dm/LoaiChuongTrinhLienKetDaoTao"), "IdLoaiChuongTrinhLienKetDaoTao", "LoaiChuongTrinhLienKetDaoTao", tbChuongTrinhDaoTao.IdLoaiChuongTrinhDaoTao);
+                ViewData["IdNganhDaoTao"] = new SelectList(await ApiServices_.GetAll<DmNganhDaoTao>("/api/dm/NganhDaoTao"), "IdNganhDaoTao", "NganhDaoTao", tbChuongTrinhDaoTao.IdNganhDaoTao);
+                ViewData["IdQuocGiaCuaTruSoChinh"] = new SelectList(await ApiServices_.GetAll<DmQuocTich>("/api/dm/QuocTich"), "IdQuocTich", "TenNuoc", tbChuongTrinhDaoTao.IdQuocGiaCuaTruSoChinh);
+                ViewData["IdTrangThaiCuaChuongTrinh"] = new SelectList(await ApiServices_.GetAll<DmTrangThaiChuongTrinhDaoTao>("/api/dm/TrangThaiChuongTrinhDaoTao"), "IdTrangThaiChuongTrinhDaoTao", "TrangThaiChuongTrinhDaoTao", tbChuongTrinhDaoTao.IdTrangThaiCuaChuongTrinh);
+                ViewData["IdTrinhDoDaoTao"] = new SelectList(await ApiServices_.GetAll<DmTrinhDoDaoTao>("/api/dm/TrinhDoDaoTao"), "IdTrinhDoDaoTao", "TrinhDoDaoTao", tbChuongTrinhDaoTao.IdTrinhDoDaoTao);
                 return View(tbChuongTrinhDaoTao);
             } catch (Exception ex)
             { 
@@ -194,17 +173,15 @@ namespace C500Hemis.Controllers.CTDT
                 {
                     return NotFound();
                 }
-
                 if (ModelState.IsValid)
                 {
                     try
                     {
-                        _context.Update(tbChuongTrinhDaoTao);
-                        await _context.SaveChangesAsync();
+                        await ApiServices_.Update<TbChuongTrinhDaoTao>("/api/ctdt/ChuongTrinhDaoTao", id, tbChuongTrinhDaoTao);
                     }
                     catch (DbUpdateConcurrencyException)
                     {
-                        if (!TbChuongTrinhDaoTaoExists(tbChuongTrinhDaoTao.IdChuongTrinhDaoTao))
+                        if (await TbChuongTrinhDaoTaoExists(tbChuongTrinhDaoTao.IdChuongTrinhDaoTao) == false)
                         {
                             return NotFound();
                         }
@@ -215,14 +192,14 @@ namespace C500Hemis.Controllers.CTDT
                     }
                     return RedirectToAction(nameof(Index));
                 }
-                ViewData["IdDonViCapBang"] = new SelectList(_context.DmDonViCapBangs, "IdDonViCapBang", "IdDonViCapBang", tbChuongTrinhDaoTao.IdDonViCapBang);
-                ViewData["IdHocCheDaoTao"] = new SelectList(_context.DmHocCheDaoTaos, "IdHocCheDaoTao", "IdHocCheDaoTao", tbChuongTrinhDaoTao.IdHocCheDaoTao);
-                ViewData["IdLoaiChuongTrinhDaoTao"] = new SelectList(_context.DmLoaiChuongTrinhDaoTaos, "IdLoaiChuongTrinhDaoTao", "IdLoaiChuongTrinhDaoTao", tbChuongTrinhDaoTao.IdLoaiChuongTrinhDaoTao);
-                ViewData["IdLoaiChuongTrinhLienKetDaoTao"] = new SelectList(_context.DmLoaiChuongTrinhLienKetDaoTaos, "IdLoaiChuongTrinhLienKetDaoTao", "IdLoaiChuongTrinhLienKetDaoTao", tbChuongTrinhDaoTao.IdLoaiChuongTrinhLienKetDaoTao);
-                ViewData["IdNganhDaoTao"] = new SelectList(_context.DmNganhDaoTaos, "IdNganhDaoTao", "IdNganhDaoTao", tbChuongTrinhDaoTao.IdNganhDaoTao);
-                ViewData["IdQuocGiaCuaTruSoChinh"] = new SelectList(_context.DmQuocTiches, "IdQuocTich", "IdQuocTich", tbChuongTrinhDaoTao.IdQuocGiaCuaTruSoChinh);
-                ViewData["IdTrangThaiCuaChuongTrinh"] = new SelectList(_context.DmTrangThaiChuongTrinhDaoTaos, "IdTrangThaiChuongTrinhDaoTao", "IdTrangThaiChuongTrinhDaoTao", tbChuongTrinhDaoTao.IdTrangThaiCuaChuongTrinh);
-                ViewData["IdTrinhDoDaoTao"] = new SelectList(_context.DmTrinhDoDaoTaos, "IdTrinhDoDaoTao", "IdTrinhDoDaoTao", tbChuongTrinhDaoTao.IdTrinhDoDaoTao);
+                ViewData["IdDonViCapBang"] = new SelectList(await ApiServices_.GetAll<DmDonViCapBang>("/api/dm/DonViCapBang"), "IdDonViCapBang", "DonViCapBang", tbChuongTrinhDaoTao.IdDonViCapBang);
+                ViewData["IdHocCheDaoTao"] = new SelectList(await ApiServices_.GetAll<DmHocCheDaoTao>("/api/dm/HocCheDaoTao"), "IdHocCheDaoTao", "HocCheDaoTao", tbChuongTrinhDaoTao.IdHocCheDaoTao);
+                ViewData["IdLoaiChuongTrinhDaoTao"] = new SelectList(await ApiServices_.GetAll<DmLoaiChuongTrinhDaoTao>("/api/dm/LoaiChuongTrinhDaoTao"), "IdLoaiChuongTrinhDaoTao", "LoaiChuongTrinhDaoTao", tbChuongTrinhDaoTao.IdLoaiChuongTrinhDaoTao);
+                ViewData["IdLoaiChuongTrinhLienKetDaoTao"] = new SelectList(await ApiServices_.GetAll<DmLoaiChuongTrinhLienKetDaoTao>("/api/dm/LoaiChuongTrinhLienKetDaoTao"), "IdLoaiChuongTrinhLienKetDaoTao", "LoaiChuongTrinhLienKetDaoTao", tbChuongTrinhDaoTao.IdLoaiChuongTrinhDaoTao);
+                ViewData["IdNganhDaoTao"] = new SelectList(await ApiServices_.GetAll<DmNganhDaoTao>("/api/dm/NganhDaoTao"), "IdNganhDaoTao", "NganhDaoTao", tbChuongTrinhDaoTao.IdNganhDaoTao);
+                ViewData["IdQuocGiaCuaTruSoChinh"] = new SelectList(await ApiServices_.GetAll<DmQuocTich>("/api/dm/QuocTich"), "IdQuocTich", "TenNuoc", tbChuongTrinhDaoTao.IdQuocGiaCuaTruSoChinh);
+                ViewData["IdTrangThaiCuaChuongTrinh"] = new SelectList(await ApiServices_.GetAll<DmTrangThaiChuongTrinhDaoTao>("/api/dm/TrangThaiChuongTrinhDaoTao"), "IdTrangThaiChuongTrinhDaoTao", "TrangThaiChuongTrinhDaoTao", tbChuongTrinhDaoTao.IdTrangThaiCuaChuongTrinh);
+                ViewData["IdTrinhDoDaoTao"] = new SelectList(await ApiServices_.GetAll<DmTrinhDoDaoTao>("/api/dm/TrinhDoDaoTao"), "IdTrinhDoDaoTao", "TrinhDoDaoTao", tbChuongTrinhDaoTao.IdTrinhDoDaoTao);
                 return View(tbChuongTrinhDaoTao);
             } catch (Exception ex) 
             {
@@ -243,17 +220,8 @@ namespace C500Hemis.Controllers.CTDT
                 {
                     return NotFound();
                 }
-
-                var tbChuongTrinhDaoTao = await _context.TbChuongTrinhDaoTaos
-                    .Include(t => t.IdDonViCapBangNavigation)
-                    .Include(t => t.IdHocCheDaoTaoNavigation)
-                    .Include(t => t.IdLoaiChuongTrinhDaoTaoNavigation)
-                    .Include(t => t.IdLoaiChuongTrinhLienKetDaoTaoNavigation)
-                    .Include(t => t.IdNganhDaoTaoNavigation)
-                    .Include(t => t.IdQuocGiaCuaTruSoChinhNavigation)
-                    .Include(t => t.IdTrangThaiCuaChuongTrinhNavigation)
-                    .Include(t => t.IdTrinhDoDaoTaoNavigation)
-                    .FirstOrDefaultAsync(m => m.IdChuongTrinhDaoTao == id);
+                var tbChuongTrinhDaoTaos = await ApiServices_.GetAll<TbChuongTrinhDaoTao>("/api/ctdt/ChuongTrinhDaoTao");
+                var tbChuongTrinhDaoTao = tbChuongTrinhDaoTaos.FirstOrDefault(m => m.IdChuongTrinhDaoTao == id);
                 if (tbChuongTrinhDaoTao == null)
                 {
                     return NotFound();
@@ -274,25 +242,19 @@ namespace C500Hemis.Controllers.CTDT
         public async Task<IActionResult> DeleteConfirmed(int id) // Lệnh xác nhận xóa hẳn một CTĐT
         {
             try {
-                var tbChuongTrinhDaoTao = await _context.TbChuongTrinhDaoTaos.FindAsync(id);
-                if (tbChuongTrinhDaoTao != null)
-                {
-                    _context.TbChuongTrinhDaoTaos.Remove(tbChuongTrinhDaoTao);
-                }
-
-                await _context.SaveChangesAsync();
+                await ApiServices_.Delete<TbChuongTrinhDaoTao>("/api/ctdt/ChuongTrinhDaoTao", id);
                 return RedirectToAction(nameof(Index));
             } catch (Exception ex)
             { 
-
                 return BadRequest();
             }
             
         }
 
-        private bool TbChuongTrinhDaoTaoExists(int id)
+        private async Task<bool> TbChuongTrinhDaoTaoExists(int id)
         {
-            return _context.TbChuongTrinhDaoTaos.Any(e => e.IdChuongTrinhDaoTao == id);
+            var tbChuongTrinhDaoTaos = await ApiServices_.GetAll<TbChuongTrinhDaoTao>("/api/ctdt/ChuongTrinhDaoTao");
+            return tbChuongTrinhDaoTaos.Any(e => e.IdChuongTrinhDaoTao == id);
         }
     }
 }

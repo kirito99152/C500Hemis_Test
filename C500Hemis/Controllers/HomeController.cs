@@ -19,8 +19,10 @@ namespace C500Hemis.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<TbCanBo> canBos = await _apiServices.GetAll<TbCanBo>("/api/cb/KyLuatCanBo");
-            return Content(JsonConvert.SerializeObject(canBos));
+            // List<TbCanBo> canBos = await _apiServices.GetAll<TbCanBo>("/api/cb/KyLuatCanBo");
+            // return Content(JsonConvert.SerializeObject(canBos));
+            
+            return View();
         }
 
         public IActionResult CB()
