@@ -7,10 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<C500Hemis.Models.HemisContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("C500")));
 
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddHttpClient<C500Hemis.API.ApiServices>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

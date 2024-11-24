@@ -1,5 +1,7 @@
+using C500Hemis.API;
 using C500Hemis.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Diagnostics;
 
 namespace C500Hemis.Controllers
@@ -7,15 +9,18 @@ namespace C500Hemis.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApiServices _apiServices;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApiServices apiServices)
         {
             _logger = logger;
+            _apiServices = apiServices;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            List<TbCanBo> canBos = await _apiServices.GetAll<TbCanBo>("/api/cb/KyLuatCanBo");
+            return Content(JsonConvert.SerializeObject(canBos));
         }
 
         public IActionResult CB()
