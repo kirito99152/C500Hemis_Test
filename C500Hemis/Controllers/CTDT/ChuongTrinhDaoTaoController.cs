@@ -21,13 +21,36 @@ namespace C500Hemis.Controllers.CTDT
 
         // GET: ChuongTrinhDaoTao
         // Lấy danh sách CTĐT từ database, trả về view Index.
+        
+        private async Task<List<TbChuongTrinhDaoTao>> TbChuongTrinhDaoTaos() {
+            List<TbChuongTrinhDaoTao> tbChuongTrinhDaoTaos = await ApiServices_.GetAll<TbChuongTrinhDaoTao>("/api/ctdt/ChuongTrinhDaoTao");
+            List<DmDonViCapBang> dmdonViCapBangs = await ApiServices_.GetAll<DmDonViCapBang>("/api/dm/DonViCapBang");
+            List<DmHocCheDaoTao> dmhocCheDaoTaos = await ApiServices_.GetAll<DmHocCheDaoTao>("/api/dm/HocCheDaoTao");
+            List<DmLoaiChuongTrinhDaoTao> dmloaiChuongTrinhDaoTaos = await ApiServices_.GetAll<DmLoaiChuongTrinhDaoTao>("/api/dm/LoaiChuongTrinhDaoTao");
+            List<DmLoaiChuongTrinhLienKetDaoTao> dmloaiChuongTrinhLienKetDaoTaos = await ApiServices_.GetAll<DmLoaiChuongTrinhLienKetDaoTao>("/api/dm/LoaiChuongTrinhLienKetDaoTao");
+            List<DmNganhDaoTao> dmnganhDaoTaos = await ApiServices_.GetAll<DmNganhDaoTao>("/api/dm/NganhDaoTao");
+            List<DmQuocTich> dmQuocTiches = await ApiServices_.GetAll<DmQuocTich>("/api/dm/QuocTich");
+            List<DmTrangThaiChuongTrinhDaoTao> dmTrangThaiChuongTrinhDaoTaos = await ApiServices_.GetAll<DmTrangThaiChuongTrinhDaoTao>("/api/dm/TrangThaiChuongTrinhDaoTao");
+            List<DmTrinhDoDaoTao> dmTrinhDoDaoTaos = await ApiServices_.GetAll<DmTrinhDoDaoTao>("/api/dm/TrinhDoDaoTao");
+            tbChuongTrinhDaoTaos.ForEach(item => {
+                item.IdDonViCapBangNavigation =  dmdonViCapBangs.FirstOrDefault(x => x.IdDonViCapBang == item.IdDonViCapBang);
+                item.IdHocCheDaoTaoNavigation =  dmhocCheDaoTaos.FirstOrDefault(x => x.IdHocCheDaoTao == item.IdHocCheDaoTao);
+                item.IdLoaiChuongTrinhDaoTaoNavigation =  dmloaiChuongTrinhDaoTaos.FirstOrDefault(x => x.IdLoaiChuongTrinhDaoTao == item.IdLoaiChuongTrinhDaoTao);
+                item.IdLoaiChuongTrinhLienKetDaoTaoNavigation =  dmloaiChuongTrinhLienKetDaoTaos.FirstOrDefault(x => x.IdLoaiChuongTrinhLienKetDaoTao == item.IdLoaiChuongTrinhDaoTao);
+                item.IdNganhDaoTaoNavigation =  dmnganhDaoTaos.FirstOrDefault(x => x.IdNganhDaoTao == item.IdNganhDaoTao);
+                item.IdQuocGiaCuaTruSoChinhNavigation =  dmQuocTiches.FirstOrDefault(x => x.IdQuocTich == item.IdQuocGiaCuaTruSoChinh);
+                item.IdTrangThaiCuaChuongTrinhNavigation =  dmTrangThaiChuongTrinhDaoTaos.FirstOrDefault(x => x.IdTrangThaiChuongTrinhDaoTao == item.IdTrangThaiCuaChuongTrinh);
+                item.IdTrinhDoDaoTaoNavigation =  dmTrinhDoDaoTaos.FirstOrDefault(x => x.IdTrinhDoDaoTao == item.IdTrinhDoDaoTao);
+            });
+            return tbChuongTrinhDaoTaos;
+        }
+
         public async Task<IActionResult> Index() 
         {
             try {
-                List<TbChuongTrinhDaoTao> getall = await ApiServices_.GetAll<TbChuongTrinhDaoTao>("/api/ctdt/ChuongTrinhDaoTao"); 
+                List<TbChuongTrinhDaoTao> getall =  await TbChuongTrinhDaoTaos();
                 // Lấy data từ các table khác có liên quan (khóa ngoài) để hiển thị trên Index
                 return View(getall); 
-                
             // Bắt lỗi các trường hợp ngoại lệ
             } catch ( Exception ex ) 
             {
@@ -47,7 +70,7 @@ namespace C500Hemis.Controllers.CTDT
                 }
 
                 // Tìm các dữ liệu theo Id tương ứng đã truyền vào view Details
-                var tbChuongTrinhDaoTaos = await ApiServices_.GetAll<TbChuongTrinhDaoTao>("/api/ctdt/ChuongTrinhDaoTao");
+                var tbChuongTrinhDaoTaos = await TbChuongTrinhDaoTaos();
                 var tbChuongTrinhDaoTao = tbChuongTrinhDaoTaos.FirstOrDefault(m => m.IdChuongTrinhDaoTao == id);
                 // Nếu không tìm thấy Id tương ứng, chương trình sẽ báo lỗi NotFound
                 if (tbChuongTrinhDaoTao == null)
