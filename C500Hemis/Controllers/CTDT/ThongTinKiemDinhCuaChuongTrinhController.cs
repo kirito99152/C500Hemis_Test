@@ -6,23 +6,49 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using C500Hemis.Models;
+using C500Hemis.API;
+using C500Hemis.Models.DM;
+using Newtonsoft.Json;
 
 namespace C500Hemis.Controllers.CTDT
 {
     public class ThongTinKiemDinhCuaChuongTrinhController : Controller
     {
-        private readonly HemisContext _context;
+        private readonly ApiServices ApiServices_;
 
-        public ThongTinKiemDinhCuaChuongTrinhController(HemisContext context)
+        public ThongTinKiemDinhCuaChuongTrinhController(ApiServices services)
         {
-            _context = context;
+            ApiServices_ = services;
         }
 
+        private async Task<List<TbThongTinKiemDinhCuaChuongTrinh>> TbThongTinKiemDinhCuaChuongTrinhs() {
+            List<TbThongTinKiemDinhCuaChuongTrinh> TbThongTinKiemDinhCuaChuongTrinhs = await ApiServices_.GetAll<TbThongTinKiemDinhCuaChuongTrinh>("/api/ctdt/ThongTinKiemDinhCuaChuongTrinh");
+            List<TbChuongTrinhDaoTao> tbChuongTrinhDaoTaos = await ApiServices_.GetAll<TbChuongTrinhDaoTao>("/api/ctdt/ChuongTrinhDaoTao");
+            List<DmKetQuaKiemDinh> dmKetQuaKiemDinhs = await ApiServices_.GetAll<DmKetQuaKiemDinh>("/api/dm/KetQuaKiemDinh");
+            List<DmToChucKiemDinh> dmToChucKiemDinhs = await ApiServices_.GetAll<DmToChucKiemDinh>("/api/dm/ToChucKiemDinh");
+            TbThongTinKiemDinhCuaChuongTrinhs.ForEach(item => {
+                item.IdChuongTrinhDaoTaoNavigation = tbChuongTrinhDaoTaos.FirstOrDefault(t => t.IdChuongTrinhDaoTao == item.IdChuongTrinhDaoTao);
+                item.IdKetQuaKiemDinhNavigation = dmKetQuaKiemDinhs.FirstOrDefault(t => t.IdKetQuaKiemDinh == item.IdKetQuaKiemDinh);
+                item.IdToChucKiemDinhNavigation = dmToChucKiemDinhs.FirstOrDefault(t => t.IdToChucKiemDinh == item.IdToChucKiemDinh);
+            });
+            return TbThongTinKiemDinhCuaChuongTrinhs;
+        }
+        private async Task Selectlist(TbThongTinKiemDinhCuaChuongTrinh? tbThongTinKiemDinhCuaChuongTrinh = null) {
+            if (tbThongTinKiemDinhCuaChuongTrinh == null) {
+                ViewData["IdChuongTrinhDaoTao"] = new SelectList(await ApiServices_.GetAll<TbChuongTrinhDaoTao>("/api/ctdt/ChuongTrinhDaoTao"), "IdChuongTrinhDaoTao", "IdChuongTrinhDaoTao");
+                ViewData["IdKetQuaKiemDinh"] = new SelectList(await ApiServices_.GetAll<DmKetQuaKiemDinh>("/api/dm/KetQuaKiemDinh"), "IdKetQuaKiemDinh", "IdKetQuaKiemDinh");
+                ViewData["IdToChucKiemDinh"] = new SelectList(await ApiServices_.GetAll<DmToChucKiemDinh>("/api/dm/ToChucKiemDinh"), "IdToChucKiemDinh", "IdToChucKiemDinh");
+            } else {
+                ViewData["IdChuongTrinhDaoTao"] = new SelectList(await ApiServices_.GetAll<TbChuongTrinhDaoTao>("/api/ctdt/ChuongTrinhDaoTao"), "IdChuongTrinhDaoTao", "IdChuongTrinhDaoTao", tbThongTinKiemDinhCuaChuongTrinh.IdChuongTrinhDaoTao);
+                ViewData["IdKetQuaKiemDinh"] = new SelectList(await ApiServices_.GetAll<DmKetQuaKiemDinh>("/api/dm/KetQuaKiemDinh"), "IdKetQuaKiemDinh", "IdKetQuaKiemDinh", tbThongTinKiemDinhCuaChuongTrinh.IdKetQuaKiemDinh);
+                ViewData["IdToChucKiemDinh"] = new SelectList(await ApiServices_.GetAll<DmToChucKiemDinh>("/api/dm/ToChucKiemDinh"), "IdToChucKiemDinh", "IdToChucKiemDinh", tbThongTinKiemDinhCuaChuongTrinh.IdToChucKiemDinh);
+            }
+        }
         // GET: ThongTinKiemDinhCuaChuongTrinh
         public async Task<IActionResult> Index()
         {
-            var hemisContext = _context.TbThongTinKiemDinhCuaChuongTrinhs.Include(t => t.IdChuongTrinhDaoTaoNavigation).Include(t => t.IdKetQuaKiemDinhNavigation).Include(t => t.IdToChucKiemDinhNavigation);
-            return View(await hemisContext.ToListAsync());
+            List<TbThongTinKiemDinhCuaChuongTrinh> tbThongTinKiemDinhCuaChuongTrinhs = await TbThongTinKiemDinhCuaChuongTrinhs();
+            return View(tbThongTinKiemDinhCuaChuongTrinhs);
         }
 
         // GET: ThongTinKiemDinhCuaChuongTrinh/Details/5
@@ -33,11 +59,8 @@ namespace C500Hemis.Controllers.CTDT
                 return NotFound();
             }
 
-            var tbThongTinKiemDinhCuaChuongTrinh = await _context.TbThongTinKiemDinhCuaChuongTrinhs
-                .Include(t => t.IdChuongTrinhDaoTaoNavigation)
-                .Include(t => t.IdKetQuaKiemDinhNavigation)
-                .Include(t => t.IdToChucKiemDinhNavigation)
-                .FirstOrDefaultAsync(m => m.IdThongTinKiemDinhCuaChuongTrinh == id);
+            var tbThongTinKiemDinhCuaChuongTrinhs = await TbThongTinKiemDinhCuaChuongTrinhs();
+            var tbThongTinKiemDinhCuaChuongTrinh = tbThongTinKiemDinhCuaChuongTrinhs.FirstOrDefault(m => m.IdThongTinKiemDinhCuaChuongTrinh == id);
             if (tbThongTinKiemDinhCuaChuongTrinh == null)
             {
                 return NotFound();
@@ -47,11 +70,9 @@ namespace C500Hemis.Controllers.CTDT
         }
 
         // GET: ThongTinKiemDinhCuaChuongTrinh/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["IdChuongTrinhDaoTao"] = new SelectList(_context.TbChuongTrinhDaoTaos, "IdChuongTrinhDaoTao", "IdChuongTrinhDaoTao");
-            ViewData["IdKetQuaKiemDinh"] = new SelectList(_context.DmKetQuaKiemDinhs, "IdKetQuaKiemDinh", "IdKetQuaKiemDinh");
-            ViewData["IdToChucKiemDinh"] = new SelectList(_context.DmToChucKiemDinhs, "IdToChucKiemDinh", "IdToChucKiemDinh");
+            await Selectlist();
             return View();
         }
 
@@ -62,15 +83,17 @@ namespace C500Hemis.Controllers.CTDT
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdThongTinKiemDinhCuaChuongTrinh,IdChuongTrinhDaoTao,IdToChucKiemDinh,IdKetQuaKiemDinh,SoQuyetDinh,NgayCapChungNhanKiemDinh,ThoiHanKiemDinh")] TbThongTinKiemDinhCuaChuongTrinh tbThongTinKiemDinhCuaChuongTrinh)
         {
+            foreach (var state in ModelState) {
+                foreach (var error in state.Value.Errors) {
+                    return Content(error.ErrorMessage);
+                }
+            }
             if (ModelState.IsValid)
             {
-                _context.Add(tbThongTinKiemDinhCuaChuongTrinh);
-                await _context.SaveChangesAsync();
+                await ApiServices_.Create<TbThongTinKiemDinhCuaChuongTrinh>("/api/ctdt/ThongTinKiemDinhCuaChuongTrinh", tbThongTinKiemDinhCuaChuongTrinh);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdChuongTrinhDaoTao"] = new SelectList(_context.TbChuongTrinhDaoTaos, "IdChuongTrinhDaoTao", "IdChuongTrinhDaoTao", tbThongTinKiemDinhCuaChuongTrinh.IdChuongTrinhDaoTao);
-            ViewData["IdKetQuaKiemDinh"] = new SelectList(_context.DmKetQuaKiemDinhs, "IdKetQuaKiemDinh", "IdKetQuaKiemDinh", tbThongTinKiemDinhCuaChuongTrinh.IdKetQuaKiemDinh);
-            ViewData["IdToChucKiemDinh"] = new SelectList(_context.DmToChucKiemDinhs, "IdToChucKiemDinh", "IdToChucKiemDinh", tbThongTinKiemDinhCuaChuongTrinh.IdToChucKiemDinh);
+            await Selectlist(tbThongTinKiemDinhCuaChuongTrinh);
             return View(tbThongTinKiemDinhCuaChuongTrinh);
         }
 
@@ -82,14 +105,12 @@ namespace C500Hemis.Controllers.CTDT
                 return NotFound();
             }
 
-            var tbThongTinKiemDinhCuaChuongTrinh = await _context.TbThongTinKiemDinhCuaChuongTrinhs.FindAsync(id);
+            var tbThongTinKiemDinhCuaChuongTrinh = await ApiServices_.GetId<TbThongTinKiemDinhCuaChuongTrinh>("/api/ctdt/ThongTinKiemDinhCuaChuongTrinh", id ?? 0);
             if (tbThongTinKiemDinhCuaChuongTrinh == null)
             {
                 return NotFound();
             }
-            ViewData["IdChuongTrinhDaoTao"] = new SelectList(_context.TbChuongTrinhDaoTaos, "IdChuongTrinhDaoTao", "IdChuongTrinhDaoTao", tbThongTinKiemDinhCuaChuongTrinh.IdChuongTrinhDaoTao);
-            ViewData["IdKetQuaKiemDinh"] = new SelectList(_context.DmKetQuaKiemDinhs, "IdKetQuaKiemDinh", "IdKetQuaKiemDinh", tbThongTinKiemDinhCuaChuongTrinh.IdKetQuaKiemDinh);
-            ViewData["IdToChucKiemDinh"] = new SelectList(_context.DmToChucKiemDinhs, "IdToChucKiemDinh", "IdToChucKiemDinh", tbThongTinKiemDinhCuaChuongTrinh.IdToChucKiemDinh);
+            await Selectlist(tbThongTinKiemDinhCuaChuongTrinh);
             return View(tbThongTinKiemDinhCuaChuongTrinh);
         }
 
@@ -109,12 +130,11 @@ namespace C500Hemis.Controllers.CTDT
             {
                 try
                 {
-                    _context.Update(tbThongTinKiemDinhCuaChuongTrinh);
-                    await _context.SaveChangesAsync();
+                    await ApiServices_.Update<TbThongTinKiemDinhCuaChuongTrinh>("/api/ctdt/ThongTinKiemDinhCuaChuongTrinh", id, tbThongTinKiemDinhCuaChuongTrinh);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TbThongTinKiemDinhCuaChuongTrinhExists(tbThongTinKiemDinhCuaChuongTrinh.IdThongTinKiemDinhCuaChuongTrinh))
+                    if (!(await TbThongTinKiemDinhCuaChuongTrinhExists(tbThongTinKiemDinhCuaChuongTrinh.IdThongTinKiemDinhCuaChuongTrinh)))
                     {
                         return NotFound();
                     }
@@ -125,9 +145,7 @@ namespace C500Hemis.Controllers.CTDT
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdChuongTrinhDaoTao"] = new SelectList(_context.TbChuongTrinhDaoTaos, "IdChuongTrinhDaoTao", "IdChuongTrinhDaoTao", tbThongTinKiemDinhCuaChuongTrinh.IdChuongTrinhDaoTao);
-            ViewData["IdKetQuaKiemDinh"] = new SelectList(_context.DmKetQuaKiemDinhs, "IdKetQuaKiemDinh", "IdKetQuaKiemDinh", tbThongTinKiemDinhCuaChuongTrinh.IdKetQuaKiemDinh);
-            ViewData["IdToChucKiemDinh"] = new SelectList(_context.DmToChucKiemDinhs, "IdToChucKiemDinh", "IdToChucKiemDinh", tbThongTinKiemDinhCuaChuongTrinh.IdToChucKiemDinh);
+            await Selectlist(tbThongTinKiemDinhCuaChuongTrinh);
             return View(tbThongTinKiemDinhCuaChuongTrinh);
         }
 
@@ -139,11 +157,8 @@ namespace C500Hemis.Controllers.CTDT
                 return NotFound();
             }
 
-            var tbThongTinKiemDinhCuaChuongTrinh = await _context.TbThongTinKiemDinhCuaChuongTrinhs
-                .Include(t => t.IdChuongTrinhDaoTaoNavigation)
-                .Include(t => t.IdKetQuaKiemDinhNavigation)
-                .Include(t => t.IdToChucKiemDinhNavigation)
-                .FirstOrDefaultAsync(m => m.IdThongTinKiemDinhCuaChuongTrinh == id);
+            var tbThongTinKiemDinhCuaChuongTrinhs = await TbThongTinKiemDinhCuaChuongTrinhs();
+            var tbThongTinKiemDinhCuaChuongTrinh = tbThongTinKiemDinhCuaChuongTrinhs.FirstOrDefault(m => m.IdThongTinKiemDinhCuaChuongTrinh == id);
             if (tbThongTinKiemDinhCuaChuongTrinh == null)
             {
                 return NotFound();
@@ -157,19 +172,18 @@ namespace C500Hemis.Controllers.CTDT
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var tbThongTinKiemDinhCuaChuongTrinh = await _context.TbThongTinKiemDinhCuaChuongTrinhs.FindAsync(id);
-            if (tbThongTinKiemDinhCuaChuongTrinh != null)
-            {
-                _context.TbThongTinKiemDinhCuaChuongTrinhs.Remove(tbThongTinKiemDinhCuaChuongTrinh);
-            }
-
-            await _context.SaveChangesAsync();
+            await ApiServices_.Delete<TbThongTinKiemDinhCuaChuongTrinh>("/api/ctdt/ThongTinKiemDinhCuaChuongTrinh", id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TbThongTinKiemDinhCuaChuongTrinhExists(int id)
+        private async Task<bool> TbThongTinKiemDinhCuaChuongTrinhExists(int id)
         {
-            return _context.TbThongTinKiemDinhCuaChuongTrinhs.Any(e => e.IdThongTinKiemDinhCuaChuongTrinh == id);
+            var tbThongTinKiemDinhCuaChuongTrinh = await ApiServices_.GetId<TbThongTinKiemDinhCuaChuongTrinh>("/api/ctdt/ThongTinKiemDinhCuaChuongTrinh", id);
+            if (tbThongTinKiemDinhCuaChuongTrinh == null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
