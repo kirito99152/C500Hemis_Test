@@ -10,7 +10,7 @@ builder.Services.AddDbContext<C500Hemis.Models.HemisContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddMvcOptions(options => {
     options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(_ => "Field is required 1");
-    options.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor((a, b) => "{0} không hợp lệ cho {1}");
+    options.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor((a, b) => $"{a} không hợp lệ cho {b}");
     options.ModelBindingMessageProvider.SetMissingBindRequiredValueAccessor((a) => "Field is required 3");
     options.ModelBindingMessageProvider.SetMissingKeyOrValueAccessor(() => "Field is required 4");
     options.ModelBindingMessageProvider.SetMissingRequestBodyRequiredValueAccessor(() => "Field is required 5");
