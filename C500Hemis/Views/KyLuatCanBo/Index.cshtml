@@ -96,7 +96,10 @@
 
             <tr style="text-align: center">
                 <th>
-                    @Html.DisplayNameFor(model => model.IdCanBoNavigation)
+                    @Html.DisplayNameFor(model => model.IdCanBoNavigation.IdNguoiNavigation.Ho)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdCanBoNavigation.idng)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.LyDo)
@@ -125,7 +128,10 @@
                 <tr class="value" style="text-align: center; cursor: pointer;"
                     onclick="window.location.href='@Url.Action("Details", new { id = item.IdKyLuatCanBo })'">
                     <td>
-                        @Html.DisplayFor(modelItem => item.IdCanBoNavigation.IdNguoiNavigation.Ho) @Html.DisplayFor(modelItem => item.IdCanBoNavigation.IdNguoiNavigation.Ten)
+                        @Html.DisplayFor(modelItem => item.IdCanBoNavigation.IdNguoiNavigation.Ho)
+                    </td>
+                    <td>
+                     @Html.DisplayFor(modelItem => item.IdCanBoNavigation.IdNguoiNavigation.Ten)
                     </td>
 
                     <td style="text-align: left">
@@ -172,6 +178,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/v/dt/jszip-3.10.1/dt-2.1.8/b-3.1.2/b-colvis-3.1.2/b-html5-3.1.2/b-print-3.1.2/r-3.0.3/datatables.min.js"></script>
+    <script src="~/js/import_excel.js"></script>
+    <script src="~/js/xlsx.full.min.js"></script>
     <script>
         //Datatable trong datatable.net. Tìm hiểu thêm thông tin: https://datatables.net/manual/
         var table = new DataTable("#view_table", {
@@ -194,6 +202,48 @@
                             text: 'Thêm hồ sơ bị kỷ luật',
                             action: function (e, dt, node, config) {//Hành động của button
                                 window.location.href = '@Url.Action("Create")';
+                            }
+                        },
+                        {
+                            extend: "excel",
+                            className: 'btn btn-primary', //Thêm class cho button
+                            text: 'Xuất excel',
+                            exportOptions: {
+                                columns: function(idx, data, node) {
+                                    if (node.classList.contains("_nonorder")) return false;
+                                    return true;
+                                },
+                            }
+                        },
+                        {
+                            className: 'btn btn-primary', //Thêm class cho button
+                            text: 'Import',
+                            action: function (e, dt, node, config) {//Hành động của button
+                                import_excel((json) => {
+                                    let sheets = JSON.parse(json);
+                                    let sheet = sheets['Sheet1'];
+                                    let raw_data = [];
+                                    for (let i = 0; i < sheet.length; ++i) {
+                                        let arr = [];
+                                        for (const [key, value] of Object.entries(object1)) {
+                                            arr.push(value.toString());        
+                                        }
+                                        raw_data.push(arr);
+                                    }
+                                    $.ajax({
+                                        method:"post",
+                                        url:"/KyLuatCanBo/Receive",
+                                        data: {
+                                            json: JSON.stringify(raw_data),
+                                        },
+                                        error: function (xhr, status, error) {
+                                            alert(xhr.responseJSON.value['msg']);
+                                        },
+                                        success: function (data, status, xhr) {
+                                            alert(xhr.responseJSON.value['msg']);   
+                                        }
+                                    });
+                                });
                             }
                         }
                     ]

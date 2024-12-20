@@ -145,7 +145,9 @@ namespace C500Hemis.Controllers.CTDT
             }
             
         }
-
+        
+        // [HttpPost]
+        // public async Task Task<ActionResult> excel(])
         // GET: ChuongTrinhDaoTao/Edit
         // Lấy data từ Database với Id đã có, sau đó hiển thị ở view Edit
         // Nếu không tìm thấy Id tương ứng sẽ báo lỗi NotFound

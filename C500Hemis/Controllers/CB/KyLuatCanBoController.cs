@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using C500Hemis.Models;
+using Newtonsoft.Json;
 
 namespace C500Hemis.Controllers.CB
 {
@@ -195,6 +196,26 @@ namespace C500Hemis.Controllers.CB
         private bool TbKyLuatCanBoExists(int id)
         {
             return _context.TbKyLuatCanBos.Any(e => e.IdKyLuatCanBo == id);
+        }
+
+        public async Task<IActionResult> Receive(string json) {
+            try  {
+                var message = "No Lỗi";
+                List<List<string>> data = JsonConvert.DeserializeObject<List<List<string>>>(json);
+                List<TbKyLuatCanBo> Lst = new List<TbKyLuatCanBo>();
+                Random rnd = new Random();
+                data.ForEach(row => {
+                    TbKyLuatCanBo model = new TbKyLuatCanBo();
+                    int id = rnd.Next(1, 100000);                    
+                    while (TbKyLuatCanBoExists(id = rnd.Next(1, 100000))) {}
+                    model.IdKyLuatCanBo = id;
+                    model.IdCanBo = null;
+                    model.SoQuyetDinh = row[0];
+                });
+                return Accepted(Json(new {msg = message}));
+            } catch(Exception ex) {
+                return BadRequest(Json(new {msg = ex.Message}));
+            }
         }
     }
 }

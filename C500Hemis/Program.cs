@@ -38,6 +38,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=ChuongTrinhDaoTao}/{action=Edit}/{id=1}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
